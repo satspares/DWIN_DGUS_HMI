@@ -1,6 +1,6 @@
 # DWIN DGUS HMI Arduino Library
 Arduino Library for DWIN DGUS T5L HMI Display
-Supporting Features till date.
+Supporting Features.
 - getHWVersion
 - restartHMI()
 - setPage()

@@ -1,4 +1,4 @@
-#######################################
+⁵#######################################
 # Syntax DWIN DGUS Display
 #######################################
 
@@ -22,6 +22,7 @@ setValue                    KEYWORD2
 getValue                    KEYWORD2
 setQRCode                   KEYWORD2
 listen                      KEYWORD2
+playSound                   KEYWORD2
 
 
 #######################################

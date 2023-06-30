@@ -33,7 +33,7 @@
 
 #define DGUS_BAUD 115200
 
-#define FORCEHWSERIAL
+//#define FORCEHWSERIAL
 //using Boards with Hardware serial you may need extra
 // defines in here and DWIN_Arduino.h eg. Teensyduino, nano (only 1 serial port) etc
 // or #define FORCEHWSERIAL here and in DWIN_Arduino.h

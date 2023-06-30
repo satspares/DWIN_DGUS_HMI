@@ -35,7 +35,7 @@
 
 #define FORCEHWSERIAL
 //using Boards with Hardware serial you may need extra
-// defines in here and DWIN.h eg. Teensyduino, nano (only 1 serial port) etc
+// defines in here and DWIN_Arduino.h eg. Teensyduino, nano (only 1 serial port) etc
 // or #define FORCEHWSERIAL here and in DWIN_Arduino.h
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(FORCEHWSERIAL)
   #define DGUS_SERIAL Serial2

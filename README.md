@@ -20,7 +20,7 @@ Download the Library and extract the folder in the libraries of Arduino IDE
 #### Include DWIN Library (eg. DWIN_Arduino.h) 
 ```C++
 #include <DWIN_Arduino.h>
-```
+
 //#define FORCEHWSERIAL
 //using Boards with Hardware serial you may need extra
 // defines in here and DWIN_Arduino.h eg. Teensyduino, nano (only 1 serial port) etc

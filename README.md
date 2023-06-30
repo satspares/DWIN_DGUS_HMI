@@ -11,13 +11,14 @@ Supporting Features till date.
 - setText()
 - beepHMI()
 - listenEvents()
-- playSound()  Added 30-June-2023
+- playSound() 
 
+## 30-June-2023 added playSound() changed lib. name to DWIN_Arduino to avoid clashes
 ## Usage
 Download the Library and extract the folder in the libraries of Arduino IDE
-#### Include DWIN Library (eg. DWIN.h) 
+#### Include DWIN Library (eg. DWIN_Arduino.h) 
 ```C++
-#include <DWIN.h>
+#include <DWIN_Arduino.h>
 ```
 
 #### Initialize the hmi Object with Rx | Tx Pins and Baud rate

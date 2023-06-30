@@ -101,7 +101,7 @@ void DWIN::setPage(byte page){
 }
 
 void DWIN::playSound(byte soundID){ 
-    //5A A5 06 82 00 A0 soundID 01 40 00
+    //5A A5 07 82 00 A0 soundID 01 40 00
     byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x07, CMD_WRITE, 0x00, 0xA0, soundID, 0x01, 0x40, 0x00};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();

@@ -11,8 +11,7 @@ Supporting Features till date.
 - setText()
 - beepHMI()
 - listenEvents()
-  30-June-2023
-- playSound()  
+- playSound()  Added 30-June-2023
 
 ## Usage
 Download the Library and extract the folder in the libraries of Arduino IDE

@@ -21,17 +21,24 @@ Download the Library and extract the folder in the libraries of Arduino IDE
 ```C++
 #include <DWIN_Arduino.h>
 ```
-
-#### Initialize the hmi Object with Rx | Tx Pins and Baud rate
-```C++
-// If Using ESP32 Or Arduino Mega 
-#if defined(ESP32)
+//#define FORCEHWSERIAL
+//using Boards with Hardware serial you may need extra
+// defines in here and DWIN_Arduino.h eg. Teensyduino, nano (only 1 serial port) etc
+// or #define FORCEHWSERIAL here and in DWIN_Arduino.h
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(FORCEHWSERIAL)
   #define DGUS_SERIAL Serial2
-  DWIN hmi(DGUS_SERIAL, 16, 17, DGUS_BAUD); // 16 Rx Pin | 17 Tx Pin
+  DWIN hmi(DGUS_SERIAL, DGUS_BAUD);
+
+// If Using ESP 32
+#elif defined(ESP32)
+#define DGUS_SERIAL Serial2
+DWIN hmi(DGUS_SERIAL, 16, 17, DGUS_BAUD);
+
 // If Using Arduino Uno
 #else
-  DWIN hmi(2, 3, DGUS_BAUD);    // 2 Rx Pin | 3 Tx Pin
+DWIN hmi(2, 3, DGUS_BAUD);
 #endif
+
 ```
 
 #### Define callback Function

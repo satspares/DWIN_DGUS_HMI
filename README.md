@@ -17,6 +17,7 @@ Supporting Features.
 
 30-June-2023 added playSound() changed lib. name to DWIN_Arduino to avoid naming clashes
 added hardware serial for Arduino Mega etc.
+
 01-July-2023 added setRTC and setRTCSOFT
 
 ## Usage

@@ -78,6 +78,10 @@ public:
     void playSound(byte soundID);
     // beep Buzzer for 1 sec
     void beepHMI();
+    // set the hardware RTC The first two digits of the year are automatically added
+    void setRTC( byte year, byte month, byte day, byte hour, byte minute, byte second);
+    // update the software RTC The first two digits of the year are automatically added
+    void setRTCSOFT( byte year, byte month, byte day, byte weekday, byte hour, byte minute, byte second);
     // Callback Function
     typedef void (*hmiListener) (String address, int lastByte, String message, String response);
 

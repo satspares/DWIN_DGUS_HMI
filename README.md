@@ -12,9 +12,13 @@ Supporting Features.
 - beepHMI()
 - listenEvents()
 - playSound() 
+- setRTC()
+- setRTCSOFT
 
 30-June-2023 added playSound() changed lib. name to DWIN_Arduino to avoid naming clashes
 added hardware serial for Arduino Mega etc.
+01-July-2023 added setRTC and setRTCSOFT
+
 ## Usage
 Download the Library and extract the folder in the libraries of Arduino IDE
 #### Include DWIN Library (eg. DWIN_Arduino.h) 

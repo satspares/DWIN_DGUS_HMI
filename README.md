@@ -20,6 +20,8 @@ added hardware serial for Arduino Mega etc.
 
 01-July-2023 added setRTC and setRTCSOFT
 
+06-July-2023 added set Software RTC Demo
+
 ## Usage
 Download the Library and extract the folder in the libraries of Arduino IDE
 #### Include DWIN Library (eg. DWIN_Arduino.h) 

@@ -23,6 +23,9 @@ getValue                    KEYWORD2
 setQRCode                   KEYWORD2
 listen                      KEYWORD2
 playSound                   KEYWORD2
+setRTC                      KEYWORD2
+setRTCSOFT                  KEYWORD2
+
 
 
 #######################################

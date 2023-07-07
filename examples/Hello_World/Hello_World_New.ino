@@ -61,6 +61,7 @@ void setup()
   Serial.println("DWIN HMI ~ Hello World");
   Serial.print("Display Hardware Version ");
   Serial.println(hmi.getHWVersion());
+  hmi.echoEnabled(false);
   hmi.hmiCallBack(onHMIEvent);
   hmi.setPage(1);
 }

@@ -16,7 +16,7 @@ bool clockTimeout = true;
 #define DGUS_SERIAL Serial2
 #define RSSIVar 0x1010  //txt 21 dec long
 #define IPaddressVar 0x1030  //txt 21 dec long
-#define StartSound 8
+#define StartSound 2
 
 #define NTP_OFFSET   0 
 #define NTP_INTERVAL 60 * 1000 * 2   // In miliseconds x 2 is 2 seconds
@@ -56,7 +56,8 @@ void setup() {
   Serial.println("DWIN HMI ~ Set RTC by Software Demo.");
   hmi.setPage(0);
   setup_wifi();
-  clockTicker.attach(60, clockCounter); 
+  clockTicker.attach(60, clockCounter);
+  hmi.echoEnabled(false); 
   hmi.hmiCallBack(onHMIEvent);
   delay(2000);
   hmi.playSound(StartSound);

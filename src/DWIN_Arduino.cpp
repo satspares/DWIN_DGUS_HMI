@@ -218,7 +218,7 @@ String DWIN::readDWIN()
 
 String DWIN::checkHex(byte currentNo)
 {
-    if (currentNo < 10)
+    if (currentNo < 0x10)
     {
         return "0" + String(currentNo, HEX);
     }

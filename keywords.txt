@@ -25,7 +25,8 @@ listen                      KEYWORD2
 playSound                   KEYWORD2
 setRTC                      KEYWORD2
 setRTCSOFT                  KEYWORD2
-
+setVPWord                   KEYWORD2
+readVPWord                  KEYWORD2
 
 
 #######################################

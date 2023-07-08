@@ -39,7 +39,7 @@ public:
     // Using ESP32 Board
     #elif defined(ESP32)
     DWIN(HardwareSerial& port, uint8_t receivePin, uint8_t transmitPin, long baud=DWIN_DEFAULT_BAUD_RATE);
-    DWIN(HardwareSerial* port, uint8_t receivePin, uint8_t transmitPin, long baud=DWIN_DEFAULT_BAUD_RATE) : DWIN(*port, receivePin, transmitPin, baud) {};
+   // DWIN(HardwareSerial* port, uint8_t receivePin, uint8_t transmitPin, long baud=DWIN_DEFAULT_BAUD_RATE) : DWIN(*port, receivePin, transmitPin, baud) {};
     
     // Using ESP8266 Board
     #elif defined(ESP8266)
@@ -74,6 +74,12 @@ public:
     void setText(long address, String textData);
     // set Byte on VP Address
     void setVP(long address, byte data);
+    // Set WordData on VP Address
+    void setVPWord(long address, int data);
+    // read WordData from VP Address you can read sequential multiple words 
+    void readVPWord(long address, byte numWords);
+    // read or write the NOR from/to VP must be on a even address 2 word are written or read
+    void norReadWrite(bool write,long VPAddress,long NORAddress);
      // Play a sound
     void playSound(byte soundID);
     // beep Buzzer for 1 sec

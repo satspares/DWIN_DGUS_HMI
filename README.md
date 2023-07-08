@@ -14,13 +14,18 @@ Supporting Features.
 - playSound() 
 - setRTC()
 - setRTCSOFT()
+- norReadWrite()
+- setVPWord()
+- readVPWord()
 
 30-June-2023 added playSound() changed lib. name to DWIN_Arduino to avoid naming clashes
 added hardware serial for Arduino Mega etc.
 
 01-July-2023 added setRTC and setRTCSOFT
 
-06-July-2023 added set Software RTC Demo
+06-July-2023 added ESP32 set Software RTC Demo
+
+08-July-2023 added ESP32 NOR Read Write Example
 
 ## Usage
 Download the Library and extract the folder in the libraries of Arduino IDE

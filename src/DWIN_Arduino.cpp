@@ -167,6 +167,31 @@ void DWIN::setVP(long address, byte data)
     readDWIN();
 }
 
+// Set WordData on VP Address 
+void DWIN::setVPWord(long address, int data){
+    // 0x5A, 0xA5, 0x05, 0x82, hiVPaddress, loVPaddress, hiData, loData
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x05, CMD_WRITE, (address >> 8) & 0xFF, (address)&0xFF, (data >> 8) & 0xFF , (data) & 0xFF};
+    _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
+    readDWIN();
+}
+
+// read WordData from VP Address you can read sequential multiple words 
+void DWIN::readVPWord(long address, byte numWords){  
+    // 0x5A, 0xA5, 0x04, 0x83, hiVPaddress, loVPaddress, 0x01 (1 vp to read) 
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x04, CMD_READ,(address >> 8) & 0xFF, (address) &0xFF, numWords}; 
+    _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
+}
+
+// read or write the NOR from/to VP must be on a even address 2 word are written or read
+void DWIN::norReadWrite(bool write,long VPAddress,long NORAddress) {
+    byte readWrite;
+    (write) ? readWrite=0xa5 : readWrite=0x5a;   ;
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x0B, CMD_WRITE, 0x00, 0x08, readWrite, (NORAddress >> 16) & 0xFF, (NORAddress >> 8) & 0xFF,
+      (NORAddress) & 0xFF, (VPAddress >> 8) & 0xFF, (VPAddress) & 0xFF, 0x00, 0x02}; 
+    _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
+    readDWIN();
+    delay(30); // DWIN Docs say - appropriate delay - is this it?           
+}
 // beep Buzzer for 1 Sec
 void DWIN::beepHMI()
 {
@@ -322,3 +347,4 @@ void DWIN::flushSerial()
     Serial.flush();
     _dwinSerial->flush();
 }
+

@@ -185,7 +185,7 @@ void DWIN::readVPWord(long address, byte numWords){
 // read or write the NOR from/to VP must be on a even address 2 word are written or read
 void DWIN::norReadWrite(bool write,long VPAddress,long NORAddress) {
     byte readWrite;
-    (write) ? readWrite=0xa5 : readWrite=0x5a;   ;
+    (write) ? (readWrite=0xa5) : (readWrite=0x5a) ;   
     byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x0B, CMD_WRITE, 0x00, 0x08, readWrite, (NORAddress >> 16) & 0xFF, (NORAddress >> 8) & 0xFF,
       (NORAddress) & 0xFF, (VPAddress >> 8) & 0xFF, (VPAddress) & 0xFF, 0x00, 0x02}; 
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));

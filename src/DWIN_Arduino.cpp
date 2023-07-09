@@ -342,6 +342,7 @@ byte DWIN::readCMDLastByte()
     return lastByte;
 }
 
+
 void DWIN::flushSerial()
 {
     Serial.flush();

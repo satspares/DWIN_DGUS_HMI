@@ -25,7 +25,7 @@ void setup() {
   //hmi.setPage(1);
   hmi.playSound(StartSound);
 
-  hmi.norReadWrite(NORREAD,0x4000,0x10);  // read nor addresses 0x10-0x11 into VPs 0x4000-0x4001 (will be blank on first run) 
+  hmi.norReadWrite(NORREAD,0x4000,0x10);  // read nor addresses 0x10-0x11 into VPs 0x4000-0x4001 (will be random on first run)
   hmi.readVPWord(0x4000,2);               // read VPs 0x4000-0x4001 causes a onHMIEvent callback event  
   hmi.listen();                           // normally in the loop but we are not there yet.
 

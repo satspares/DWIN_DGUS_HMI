@@ -4,7 +4,7 @@
 #include <Ticker.h> //https://github.com/sstaub/Ticker
 
 #define DGUS_BAUD 115200
-// Select Soft Serial Uno etc. please Hello_World example for other boards
+// Select Soft Serial Uno etc. please see Hello_World example for other boards
 DWIN hmi(2, 3, DGUS_BAUD);
 
 

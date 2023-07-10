@@ -27,6 +27,8 @@ added hardware serial for Arduino Mega etc.
 
 08-July-2023 added ESP32 NOR Read Write Example
 
+10-July-2023 added using relays on Arduino UNO Example 
+
 ## Usage
 Download the Library and extract the folder in the libraries of Arduino IDE
 #### Include DWIN Library (eg. DWIN_Arduino.h) 

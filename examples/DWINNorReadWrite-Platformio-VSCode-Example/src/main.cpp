@@ -12,7 +12,7 @@
 DWIN hmi(DGUS_SERIAL, PINRX, PINTX, DGUS_BAUD);
 // Event Occurs when response comes from HMI
 void onHMIEvent(String address, int lastByte, String message, String response);
-int getWordReply(String response, byte bytesBack);
+unsigned long getWordReply(String response, byte bytesBack);
 
 void setup() {
   Serial.begin(9600);
@@ -65,7 +65,7 @@ void onHMIEvent(String address, int lastByte, String message, String response)
  * Get the last 2 bytes returned from hmi for our use if bytesBack = 0
  * If bytesBack = 2 get the 2 previous bytes etc. 
  */
-int getWordReply(String response, byte bytesBack){
+unsigned long getWordReply(String response, byte bytesBack){
   int str_len;
   char *ptr = NULL;
   str_len = response.length() + 1; 
@@ -87,7 +87,7 @@ int getWordReply(String response, byte bytesBack){
 //  }
   index --;
   index = index - bytesBack;
-  return((int) strtol(strings[index-1], NULL, 16) << 8) + (int) strtol(strings[index], NULL, 16);
+  return((unsigned long) strtol(strings[index-1], NULL, 16) << 8) + (unsigned long) strtol(strings[index], NULL, 16);
 }
 
 

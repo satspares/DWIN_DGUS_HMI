@@ -16,9 +16,10 @@
     #include "WProgram.h"
 #endif
 
-
-#ifndef ESP32
+#ifndef ARDUINO_ARCH_RP2040 
+ #ifndef ESP32
     #include <SoftwareSerial.h>
+ #endif   
 #endif
 
 
@@ -35,6 +36,10 @@ public:
     // Using AVR Board with Hardware Serial
     #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(FORCEHWSERIAL)
      DWIN(HardwareSerial& port,long baud=DWIN_DEFAULT_BAUD_RATE);
+    
+    // Using Pico Board
+    #elif defined(ARDUINO_ARCH_RP2040)
+    DWIN(HardwareSerial& port, long baud , bool initSerial);
  
     // Using ESP32 Board
     #elif defined(ESP32)
@@ -94,12 +99,17 @@ public:
     // CallBack Method
     void hmiCallBack(hmiListener callBackFunction);
 
+    // Init the serial port in setup useful for Pico boards
+    void initSerial(HardwareSerial& port, long baud);
+
 
 private:
 
-    #ifndef ESP32
+    #ifndef ARDUINO_ARCH_RP2040 
+     #ifndef ESP32
      SoftwareSerial* localSWserial = nullptr; 
-    #endif
+     #endif   
+     #endif
 
     Stream* _dwinSerial;   // DWIN Serial interface
     bool _isSoft;          // Is serial interface software

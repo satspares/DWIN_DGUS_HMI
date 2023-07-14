@@ -19,6 +19,17 @@ DWIN::DWIN(HardwareSerial &port, long baud)
     init((Stream *)&port, false);
 }
 
+
+#elif defined(ARDUINO_ARCH_RP2040)
+DWIN::DWIN(HardwareSerial& port, long baud, bool initSerial)
+{    
+     if (initSerial){  
+     port.begin(baud, SERIAL_8N1);
+     init((Stream *)&port, false); 
+     }       
+}
+
+
 #elif defined(ESP32)
 DWIN::DWIN(HardwareSerial &port, uint8_t receivePin, uint8_t transmitPin, long baud)
 {
@@ -56,7 +67,7 @@ DWIN::DWIN(uint8_t rx, uint8_t tx, long baud)
 
 void DWIN::init(Stream *port, bool isSoft)
 {
-    Serial.println();
+   // Serial.println();
     this->_dwinSerial = port;
     this->_isSoft = isSoft;
 }
@@ -201,6 +212,13 @@ void DWIN::beepHMI()
     readDWIN();
 }
 
+// init the serial port in setup useful for Pico boards
+void DWIN::initSerial(HardwareSerial& port, long baud)
+{      
+     port.begin(baud, SERIAL_8N1);
+     init((Stream *)&port, false);   
+}
+
 // SET CallBack Event
 void DWIN::hmiCallBack(hmiListener callBack)
 {
@@ -265,7 +283,7 @@ String DWIN::handle()
     while ((millis() - startTime < READ_TIMEOUT))
     {
         while (_dwinSerial->available() > 0)
-        {
+        { 
             delay(10);
             int inhex = _dwinSerial->read();
             if (inhex == 90 || inhex == 165)

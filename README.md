@@ -32,8 +32,8 @@ added hardware serial for Arduino Mega etc.
 14-July-2023 add rasperry pi pico example
 
 ## Usage
-Download the Library and extract the folder in the libraries of Arduino IDE
-See example for rasperry pi pico
+Download the Library and extract the folder in the libraries of Arduino IDE,
+ see example for rasperry pi pico
 #### Include DWIN Library (eg. DWIN_Arduino.h) 
 ```C++
 #include <DWIN_Arduino.h>

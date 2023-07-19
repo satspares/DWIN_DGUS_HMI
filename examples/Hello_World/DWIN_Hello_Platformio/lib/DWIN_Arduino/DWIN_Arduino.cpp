@@ -19,16 +19,15 @@ DWIN::DWIN(HardwareSerial &port, long baud)
     init((Stream *)&port, false);
 }
 
-
 #elif defined(ARDUINO_ARCH_RP2040)
-DWIN::DWIN(HardwareSerial& port, long baud, bool initSerial)
-{    
-     if (initSerial){  
-     port.begin(baud, SERIAL_8N1);
-     init((Stream *)&port, false); 
-     }       
+DWIN::DWIN(HardwareSerial &port, long baud, bool initSerial)
+{
+    if (initSerial)
+    {
+        port.begin(baud, SERIAL_8N1);
+        init((Stream *)&port, false);
+    }
 }
-
 
 #elif defined(ESP32)
 DWIN::DWIN(HardwareSerial &port, uint8_t receivePin, uint8_t transmitPin, long baud)
@@ -67,7 +66,7 @@ DWIN::DWIN(uint8_t rx, uint8_t tx, long baud)
 
 void DWIN::init(Stream *port, bool isSoft)
 {
-   // Serial.println();
+    // Serial.println();
     this->_dwinSerial = port;
     this->_isSoft = isSoft;
 }
@@ -139,25 +138,25 @@ byte DWIN::getPage()
 void DWIN::setRTC(byte year, byte month, byte day, byte hour, byte minute, byte second)
 {
     // 5A A5 0B 82 00 9C 5A A5 year month day hour minute second
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x0B, CMD_WRITE, 0x00, 0x9C, 0x5A, 0xA5, year, month, day, hour, minute, second};  
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x0B, CMD_WRITE, 0x00, 0x9C, 0x5A, 0xA5, year, month, day, hour, minute, second};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }
 // update the software RTC The first two digits of the year are automatically added
-void DWIN::setRTCSOFT( byte year, byte month, byte day, byte weekday, byte hour, byte minute, byte second)
+void DWIN::setRTCSOFT(byte year, byte month, byte day, byte weekday, byte hour, byte minute, byte second)
 {
-   //5A A5 0B 82 0010 year month day weekday(0-6 0=Sunday) hour minute second 00
-   byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x0B, CMD_WRITE, 0x00, 0x10, year, month, day, weekday, hour, minute, second, 0x00};
-   _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
-   readDWIN();
+    // 5A A5 0B 82 0010 year month day weekday(0-6 0=Sunday) hour minute second 00
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x0B, CMD_WRITE, 0x00, 0x10, year, month, day, weekday, hour, minute, second, 0x00};
+    _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
+    readDWIN();
 }
 // Set Text on VP Address
 void DWIN::setText(long address, String textData)
 {
 
     int dataLen = textData.length();
-    byte startCMD[] = {CMD_HEAD1, CMD_HEAD2, dataLen + 3, CMD_WRITE,
-                       (address >> 8) & 0xFF, (address)&0xFF};
+    byte startCMD[] = {CMD_HEAD1, CMD_HEAD2, (uint8_t)(dataLen + 3), CMD_WRITE,
+                       (uint8_t)((address >> 8) & 0xFF), (uint8_t)((address)&0xFF)};
     byte dataCMD[dataLen];
     textData.getBytes(dataCMD, dataLen + 1);
     byte sendBuffer[6 + dataLen];
@@ -173,35 +172,38 @@ void DWIN::setText(long address, String textData)
 void DWIN::setVP(long address, byte data)
 {
     // 0x5A, 0xA5, 0x05, 0x82, 0x40, 0x20, 0x00, state
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x05, CMD_WRITE, (address >> 8) & 0xFF, (address)&0xFF, 0x00, data};
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x05, CMD_WRITE, (uint8_t)((address >> 8) & 0xFF), (uint8_t)((address)&0xFF), 0x00, data};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }
 
-// Set WordData on VP Address 
-void DWIN::setVPWord(long address, int data){
+// Set WordData on VP Address
+void DWIN::setVPWord(long address, int data)
+{
     // 0x5A, 0xA5, 0x05, 0x82, hiVPaddress, loVPaddress, hiData, loData
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x05, CMD_WRITE, (address >> 8) & 0xFF, (address)&0xFF, (data >> 8) & 0xFF , (data) & 0xFF};
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x05, CMD_WRITE, (uint8_t)((address >> 8) & 0xFF), (uint8_t)((address)&0xFF), (uint8_t)((data >> 8) & 0xFF),(uint8_t)((data)&0xFF)};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }
 
-// read WordData from VP Address you can read sequential multiple words 
-void DWIN::readVPWord(long address, byte numWords){  
-    // 0x5A, 0xA5, 0x04, 0x83, hiVPaddress, loVPaddress, 0x01 (1 vp to read) 
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x04, CMD_READ,(address >> 8) & 0xFF, (address) &0xFF, numWords}; 
+// read WordData from VP Address you can read sequential multiple words
+void DWIN::readVPWord(long address, byte numWords)
+{
+    // 0x5A, 0xA5, 0x04, 0x83, hiVPaddress, loVPaddress, 0x01 (1 vp to read)
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x04, CMD_READ, (uint8_t)((address >> 8) & 0xFF), (uint8_t)((address)&0xFF), numWords};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
 }
 
 // read or write the NOR from/to VP must be on a even address 2 word are written or read
-void DWIN::norReadWrite(bool write,long VPAddress,long NORAddress) {
+void DWIN::norReadWrite(bool write, long VPAddress, long NORAddress)
+{
     byte readWrite;
-    (write) ? (readWrite=0xa5) : (readWrite=0x5a) ;   
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x0B, CMD_WRITE, 0x00, 0x08, readWrite, (NORAddress >> 16) & 0xFF, (NORAddress >> 8) & 0xFF,
-      (NORAddress) & 0xFF, (VPAddress >> 8) & 0xFF, (VPAddress) & 0xFF, 0x00, 0x02}; 
+    (write) ? (readWrite = 0xa5) : (readWrite = 0x5a);
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x0B, CMD_WRITE, 0x00, 0x08, readWrite, (uint8_t)((NORAddress >> 16) & 0xFF), (uint8_t)((NORAddress >> 8) & 0xFF),
+                         (uint8_t)((NORAddress)&0xFF), (uint8_t)((VPAddress >> 8) & 0xFF), (uint8_t)((VPAddress)&0xFF), 0x00, 0x02};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
-    delay(30); // DWIN Docs say - appropriate delay - is this it?           
+    delay(30); // DWIN Docs say - appropriate delay - is this it?
 }
 // beep Buzzer for 1 Sec
 void DWIN::beepHMI()
@@ -213,10 +215,10 @@ void DWIN::beepHMI()
 }
 
 // init the serial port in setup useful for Pico boards
-void DWIN::initSerial(HardwareSerial& port, long baud)
-{      
-     port.begin(baud, SERIAL_8N1);
-     init((Stream *)&port, false);   
+void DWIN::initSerial(HardwareSerial &port, long baud)
+{
+    port.begin(baud, SERIAL_8N1);
+    init((Stream *)&port, false);
 }
 
 // SET CallBack Event
@@ -283,7 +285,7 @@ String DWIN::handle()
     while ((millis() - startTime < READ_TIMEOUT))
     {
         while (_dwinSerial->available() > 0)
-        { 
+        {
             delay(10);
             int inhex = _dwinSerial->read();
             if (inhex == 90 || inhex == 165)
@@ -360,10 +362,8 @@ byte DWIN::readCMDLastByte()
     return lastByte;
 }
 
-
 void DWIN::flushSerial()
 {
     Serial.flush();
     _dwinSerial->flush();
 }
-

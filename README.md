@@ -17,6 +17,7 @@ Supporting Features.
 - norReadWrite()
 - setVPWord()
 - readVPWord()
+- readVPByte()
 
 30-June-2023 added playSound() changed lib. name to DWIN_Arduino to avoid naming clashes
 added hardware serial for Arduino Mega etc.
@@ -30,6 +31,8 @@ added hardware serial for Arduino Mega etc.
 10-July-2023 added using relays on Arduino UNO Example 
 
 14-July-2023 add rasperry pi pico example
+
+22-July-2023 add readVPByte Function
 
 ## Usage
 Download the Library and extract the folder in the libraries of Arduino IDE,

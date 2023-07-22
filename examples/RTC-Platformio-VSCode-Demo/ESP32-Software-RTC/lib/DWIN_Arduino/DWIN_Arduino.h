@@ -79,6 +79,8 @@ public:
     void setText(long address, String textData);
     // set Byte on VP Address
     void setVP(long address, byte data);
+    // read byte from VP Address
+    byte readVPByte(long address);
     // Set WordData on VP Address
     void setVPWord(long address, int data);
     // read WordData from VP Address you can read sequential multiple words 

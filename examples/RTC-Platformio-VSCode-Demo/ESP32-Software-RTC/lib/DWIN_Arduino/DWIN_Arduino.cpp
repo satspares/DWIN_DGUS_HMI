@@ -319,7 +319,7 @@ String DWIN::handle()
                 {
                     if (messageEnd)
                     {
-                        if (isSubstr && inByte != MAX_ASCII && inByte > MIN_ASCII)
+                        if (isSubstr && inByte != MAX_ASCII && inByte >= MIN_ASCII)
                         {
                             message += char(inByte);
                         }

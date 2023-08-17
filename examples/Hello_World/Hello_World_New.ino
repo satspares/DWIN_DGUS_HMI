@@ -1,7 +1,7 @@
 
 /*
  * -----------------------------------------------------------------------------------------
- * DWIN Hello World Sketch   | Author : Tejeet ( tejdwin@gmail.com )
+ * DWIN Hello World Sketch   | Author : Tejeet ( tejdwin@gmail.com ) and satspares@gmail.com
  * -----------------------------------------------------------------------------------------
  * This is DWIN HMI Library for Arduino Compatible Boards. More Info about Display Visit
  * Official Site --> https://www.dwin-global.com/
@@ -21,7 +21,6 @@
  * TX2             17            3             19               16
  *------------------------------------------------------------------------------------------
  *
- * For More information Please Visit : https://github.com/dwinhmi/DWIN_DGUS_HMI
  *
  */
 

@@ -40,6 +40,7 @@ Download the Library and extract the folder in the libraries of Arduino IDE,
 #### Include DWIN Library (eg. DWIN_Arduino.h) 
 ```C++
 #include <DWIN_Arduino.h>
+#define DGUS_BAUD 115200
 
 //#define FORCEHWSERIAL
 //using Boards with Hardware serial you may need extra

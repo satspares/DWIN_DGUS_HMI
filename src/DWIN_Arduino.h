@@ -95,6 +95,9 @@ public:
     void setRTC( byte year, byte month, byte day, byte hour, byte minute, byte second);
     // update the software RTC The first two digits of the year are automatically added
     void setRTCSOFT( byte year, byte month, byte day, byte weekday, byte hour, byte minute, byte second);
+    // set text color (16-bit RGB) on controls which allow it ie. text control.
+    //  changes the control sp address space (sp=description pointer) content see the DWIN docs.  
+    void setTextColor(long spAddress, long spOffset, long color);
     // Callback Function
     typedef void (*hmiListener) (String address, int lastByte, String message, String response);
 

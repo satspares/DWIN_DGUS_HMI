@@ -222,6 +222,16 @@ void DWIN::beepHMI()
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }
+// set text color (16-bit RGB) on controls which allow it ie. text control.
+// changes the control sp address space (sp=description pointer) content see the DWIN docs.  
+void DWIN::setTextColor(long spAddress, long spOffset, long color)
+{ 
+    // 0x5A, 0xA5, 0x05, hi spAddress, lo spAddress, hi color, lo color
+    spAddress = (spAddress + spOffset);
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x05, CMD_WRITE, (uint8_t)((spAddress >> 8) & 0xFF), (uint8_t)((spAddress)&0xFF),(uint8_t)((color >> 8) & 0xFF), (uint8_t)((color)&0xFF)};
+    _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
+    readDWIN();
+}
 
 // init the serial port in setup useful for Pico boards
 void DWIN::initSerial(HardwareSerial &port, long baud)

@@ -80,7 +80,7 @@ void loop() {
 void onHMIEvent(String address, int lastByte, String message, String response)
 {
   Serial.println("OnEvent : [ A : " + address + " | D : " + String(lastByte, HEX) + " | M : " + message + " | R : " + response + " ]");
-  if (address = KEYPAD)
+  if (address == "1070") //KEYPAD
   {
      switch (getWordReply(response)) {
      case REBOOTME:

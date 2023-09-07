@@ -134,8 +134,6 @@ private:
     String handle();
     String checkHex(byte currentNo);
     void flushSerial();
-    // From stackoverflow float to hex  IEEE754 32-bit
-    void floatToHex(float f, byte* hex);
 
 };
 

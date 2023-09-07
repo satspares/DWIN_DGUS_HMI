@@ -35,7 +35,9 @@ added hardware serial for Arduino Mega etc.
 
 22-July-2023 add readVPByte Function
 
-04-August-2023 add setTextColor Function
+04-September-2023 added setTextColor Function
+
+07-September-2023 added setFloatValue Function
 
 ## Usage
 Download the Library and extract the folder in the libraries of Arduino IDE,

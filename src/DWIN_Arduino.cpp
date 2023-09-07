@@ -233,11 +233,27 @@ void DWIN::setTextColor(long spAddress, long spOffset, long color)
     readDWIN();
 }
 
+//set float value to 32bit DATA Variable  
+void DWIN::setFloatValue(long vpAddress, float fValue){
+    byte hx[4] = {0};
+    floatToHex(fValue,hx); 
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x07, CMD_WRITE, (uint8_t)((vpAddress >> 8) & 0xFF), (uint8_t)((vpAddress)&0xFF),hx[3],hx[2],hx[1],hx[0] };
+    _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
+    readDWIN();
+}
+
+
 // init the serial port in setup useful for Pico boards
 void DWIN::initSerial(HardwareSerial &port, long baud)
 {
     port.begin(baud, SERIAL_8N1);
     init((Stream *)&port, false);
+}
+
+// From stackoverflow float to hex  IEEE754 32-bit
+void DWIN::floatToHex(float f, byte* hex){
+  byte* f_byte = reinterpret_cast<byte*>(&f);
+  memcpy(hex, f_byte, 4);
 }
 
 // SET CallBack Event

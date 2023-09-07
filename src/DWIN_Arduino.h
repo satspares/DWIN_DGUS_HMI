@@ -98,6 +98,11 @@ public:
     // set text color (16-bit RGB) on controls which allow it ie. text control.
     //  changes the control sp address space (sp=description pointer) content see the DWIN docs.  
     void setTextColor(long spAddress, long spOffset, long color);
+    // From stackoverflow float to hex  IEEE754 32-bit
+    void floatToHex(float f, byte* hex);
+    //set float value to 32bit DATA Variable Control  
+    void setFloatValue(long vpAddress, float fValue);
+
     // Callback Function
     typedef void (*hmiListener) (String address, int lastByte, String message, String response);
 

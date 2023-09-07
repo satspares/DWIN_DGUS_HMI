@@ -1,4 +1,4 @@
-# DWIN DGUS HMI Arduino Library forked from dwinhmi/DWIN_DGUS_HMI
+&# DWIN DGUS HMI Arduino Library forked from dwinhmi/DWIN_DGUS_HMI
 Arduino Library for DWIN DGUS T5L HMI Display
 Supporting Features.
 - getHWVersion()
@@ -19,6 +19,7 @@ Supporting Features.
 - readVPWord()
 - readVPByte()
 - setTextColor()
+- setFloatValue()
 
 30-June-2023 added playSound() changed lib. name to DWIN_Arduino to avoid naming clashes
 added hardware serial for Arduino Mega etc.

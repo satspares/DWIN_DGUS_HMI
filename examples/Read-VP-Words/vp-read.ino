@@ -1,7 +1,7 @@
 
 /*
  * -----------------------------------------------------------------------------------------
- * DWIN Hello World Sketch   | Author : Tejeet ( tejdwin@gmail.com )
+ * DWIN Sketch  
  * -----------------------------------------------------------------------------------------
  * This is DWIN HMI Library for Arduino Compatible Boards. More Info about Display Visit
  * Official Site --> https://www.dwin-global.com/

@@ -128,7 +128,7 @@ void onHMIEvent(String address, int lastByte, String message, String response)
      Serial.println("");
      Serial.print("0x");
      Serial.println(getWordReply(response,0),HEX);
-    //or print the word at 0x1001 
+    //or print the word at 0x1001 if hmi.readVPWord(0x1000, 2); in the loop
     //Serial.print("0x");
     //Serial.println(getWordReply(response,2),HEX);
   }

@@ -40,6 +40,8 @@ added hardware serial for Arduino Mega etc.
 
 07-September-2023 added setFloatValue Function
 
+15-September-2023 add Test Version
+
 ## Usage
 Download the Library and extract the folder in the libraries of Arduino IDE,
  see example for rasperry pi pico

@@ -2,13 +2,13 @@
 //include after DWIN hmi(DGUS_SERIAL etc..
 
 // Read word from VP address
-u_int16_t readVP(u_int16_t vpAddress)
+uint16_t readVP(uint16_t vpAddress)
 {
     return (hmi.readVPByte(vpAddress,1) << 8) + hmi.readVPByte(vpAddress) ;
 }
 
 // Read long value from VP address
-unsigned long readLongValue(u_int16_t vpAddress){
+unsigned long readLongValue(uint16_t vpAddress){
  
     byte data[4] = {0,0,0,0};
     unsigned long lValue;
@@ -21,8 +21,8 @@ unsigned long readLongValue(u_int16_t vpAddress){
     return lValue;
 }
 
-// Read float value from VP address
-float readFloatValue(u_int16_t vpAddress){
+// Read float value frm VP address
+float readFloatValue(uint16_t vpAddress){
  
     byte data[4] = {0,0,0,0};
     float fValue;
@@ -36,7 +36,7 @@ float readFloatValue(u_int16_t vpAddress){
 }
 
 // Write long value to VP address
-void writeLongValue(u_int16_t vpAddress,unsigned long lValue){
+void writeLongValue(uint16_t vpAddress,unsigned long lValue){
     hmi.setVPWord(vpAddress,(lValue >> 16));
     hmi.setVPWord((vpAddress+1), (lValue & 0xFFFF));
 }

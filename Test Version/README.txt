@@ -10,15 +10,21 @@
   Serial.println(hmi.getGUISoftVersion());
 
 
+// Send array to dwin we dont need the 5A A5 or the size byte
+// hopefully we can worh this out.
+//byte hmiArray[] = {0x83,0x10,0x00,0x1};       // Read 0x1000 one word returns in the rx event
+//byte hmiArray[] = {0x82,0x88,0x00,0x55,0xAA};  // Write 0x1000
+hmi.sendArray(hmiArray,sizeof(hmiArray));
+
 Added some helpers in DWIN_Arduino_Helpers.h
 // Read word from VP address
-u_int16_t readVP(u_int16_t vpAddress)
+uint16_t readVP(uint16_t vpAddress)
 
 // Read long value from VP address
 unsigned long readLongValue(u_int16_t vpAddress)
 
 // Read float value from VP address
-float readFloatValue(u_int16_t vpAddress)
+float readFloatValue(uint16_t vpAddress)
 
 // Write long value to VP address
-void writeLongValue(u_int16_t vpAddress,unsigned long lValue)
+void writeLongValue(uint16_t vpAddress,unsigned long lValue)

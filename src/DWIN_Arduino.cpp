@@ -10,7 +10,7 @@
 #define MAX_ASCII 255
 
 #define CMD_READ_TIMEOUT 50
-#define READ_TIMEOUT 100
+#define READ_TIMEOUT 100 //we dont need this much
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(FORCEHWSERIAL)
 DWIN::DWIN(HardwareSerial &port, long baud)
@@ -83,6 +83,14 @@ double DWIN::getHWVersion()
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     delay(10);
     return readCMDLastByte();
+}
+
+double DWIN::getGUISoftVersion()
+{ //  HEX(5A A5 04 83 00 0F 01)
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x04, CMD_READ, 0x00, 0x0F, 0x01};
+    _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
+    delay(10);
+    return readCMDLastByte(1);
 }
 
 // Restart DWIN HMI
@@ -195,12 +203,12 @@ void DWIN::readVPWord(long address, byte numWords)
 }
 
 // read byte from VP Address
-byte DWIN::readVPByte(long address)
+byte DWIN::readVPByte(long address, bool hiWord)
 {
     // 0x5A, 0xA5, 0x04, 0x83, hiVPaddress, loVPaddress, 0x01)
     byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x04, CMD_READ, (uint8_t)((address >> 8) & 0xFF), (uint8_t)((address)&0xFF),0x1};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
-    return readCMDLastByte();
+    return readCMDLastByte(hiWord);
 }
 
 // read or write the NOR from/to VP must be on a even address 2 word are written or read
@@ -243,6 +251,23 @@ void DWIN::setFloatValue(long vpAddress, float fValue){
     readDWIN();
 }
 
+// Send array to the display we dont need the 5A A5 or 
+// the size byte hopefully we can worh this out.
+//byte hmiArray[] = {0x83,0x10,0x00,0x1};        // Read 0x1000 one word returns in the rx event
+//byte hmiArray[] = {0x82,0x88,0x00,0x55,0xAA};  // Write 0x1000
+//hmi.sendArray(hmiArray,sizeof(hmiArray));
+void DWIN::sendArray(byte dwinSendArray[],byte arraySize)
+{
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, arraySize};
+    _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
+    _dwinSerial->write(dwinSendArray,arraySize);
+    //dont look for the ack. on read as this can cause a read error
+    if (dwinSendArray[0] != 0x83) 
+    {  
+     readDWIN();
+    }
+}
+
 
 // init the serial port in setup useful for Pico boards
 void DWIN::initSerial(HardwareSerial &port, long baud)
@@ -260,7 +285,8 @@ void DWIN::hmiCallBack(hmiListener callBack)
 // Listen For incoming callback  event from HMI
 void DWIN::listen()
 {
-    handle();
+      handle();
+     
 }
 
 String DWIN::readDWIN()
@@ -275,8 +301,8 @@ String DWIN::readDWIN()
 
     String resp;
     unsigned long startTime = millis(); // Start time for Timeout
-
-    while ((millis() - startTime < READ_TIMEOUT))
+    
+    while ((millis() - startTime < READ_TIMEOUT)) 
     {
         if (_dwinSerial->available() > 0)
         {
@@ -302,7 +328,6 @@ String DWIN::checkHex(byte currentNo)
 
 String DWIN::handle()
 {
-
     int lastByte;
     String response;
     String address;
@@ -311,7 +336,6 @@ String DWIN::handle()
     bool messageEnd = true;
     bool isFirstByte = false;
     unsigned long startTime = millis();
-
     while ((millis() - startTime < READ_TIMEOUT))
     {
         while (_dwinSerial->available() > 0)
@@ -321,6 +345,7 @@ String DWIN::handle()
             if (inhex == 90 || inhex == 165)
             { // 5A A5
                 isFirstByte = true;
+                 
                 response.concat(checkHex(inhex) + " ");
                 continue;
             }
@@ -370,7 +395,7 @@ String DWIN::handle()
     return response;
 }
 
-byte DWIN::readCMDLastByte()
+byte DWIN::readCMDLastByte(bool hiWord)
 {
     //* This has to only be enabled for Software serial
 #if defined(DWIN_SOFTSERIAL)
@@ -381,15 +406,22 @@ byte DWIN::readCMDLastByte()
 #endif
 
     byte lastByte = -1;
+    byte previousByte = -1;
     unsigned long startTime = millis(); // Start time for Timeout
     while ((millis() - startTime < CMD_READ_TIMEOUT))
     {
         while (_dwinSerial->available() > 0)
         {
+            previousByte = lastByte;
             lastByte = _dwinSerial->read();
         }
     }
-    return lastByte;
+    if (hiWord){
+      return previousByte;
+    }else{
+      return lastByte;  
+    }
+   
 }
 
 void DWIN::flushSerial()

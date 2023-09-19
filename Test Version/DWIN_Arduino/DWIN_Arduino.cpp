@@ -10,7 +10,7 @@
 #define MAX_ASCII 255
 
 #define CMD_READ_TIMEOUT 50
-#define READ_TIMEOUT 100
+#define READ_TIMEOUT 100 //we dont need this much
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(FORCEHWSERIAL)
 DWIN::DWIN(HardwareSerial &port, long baud)
@@ -251,6 +251,23 @@ void DWIN::setFloatValue(long vpAddress, float fValue){
     readDWIN();
 }
 
+// Send array to the display we dont need the 5A A5 or 
+// the size byte hopefully we can worh this out.
+//byte hmiArray[] = {0x83,0x10,0x00,0x1};        // Read 0x1000 one word returns in the rx event
+//byte hmiArray[] = {0x82,0x88,0x00,0x55,0xAA};  // Write 0x1000
+//hmi.sendArray(hmiArray,sizeof(hmiArray));
+void DWIN::sendArray(byte dwinSendArray[],byte arraySize)
+{
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, arraySize};
+    _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
+    _dwinSerial->write(dwinSendArray,arraySize);
+    //dont look for the ack. on read as this can cause a read error
+    if (dwinSendArray[0] != 0x83) 
+    {  
+     readDWIN();
+    }
+}
+
 
 // init the serial port in setup useful for Pico boards
 void DWIN::initSerial(HardwareSerial &port, long baud)
@@ -284,8 +301,8 @@ String DWIN::readDWIN()
 
     String resp;
     unsigned long startTime = millis(); // Start time for Timeout
-
-    while ((millis() - startTime < READ_TIMEOUT))
+    
+    while ((millis() - startTime < READ_TIMEOUT)) 
     {
         if (_dwinSerial->available() > 0)
         {
@@ -311,7 +328,6 @@ String DWIN::checkHex(byte currentNo)
 
 String DWIN::handle()
 {
-
     int lastByte;
     String response;
     String address;
@@ -320,7 +336,6 @@ String DWIN::handle()
     bool messageEnd = true;
     bool isFirstByte = false;
     unsigned long startTime = millis();
-
     while ((millis() - startTime < READ_TIMEOUT))
     {
         while (_dwinSerial->available() > 0)
@@ -330,6 +345,7 @@ String DWIN::handle()
             if (inhex == 90 || inhex == 165)
             { // 5A A5
                 isFirstByte = true;
+                 
                 response.concat(checkHex(inhex) + " ");
                 continue;
             }

@@ -1,7 +1,8 @@
 /*
-* DWIN DGUS DWIN Library for Arduino Uno | ESP32 
+* DWIN DGUS DWIN Library for Arduino
 * This Library Supports all Basic Function
 * Created by Tejeet ( tejeet@dwin.com.cn ) 
+* Updated by ( satspares@gmail.com )
 * Please Checkout Latest Offerings FROM DWIN 
 * Here : https://www.dwin-global.com/
 */

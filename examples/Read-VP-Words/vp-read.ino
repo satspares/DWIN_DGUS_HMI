@@ -29,9 +29,6 @@
 #include <Arduino.h>
 #include <DWIN_Arduino.h>
 
-//#define ADDRESS_A "1010"
-//#define ADDRESS_B "1020"
-
 #define DGUS_BAUD 115200
 
 //#define FORCEHWSERIAL
@@ -72,6 +69,7 @@ DWIN hmi(2, 3, DGUS_BAUD);
 // Event Occurs when response comes from HMI
 void onHMIEvent(String address, int lastByte, String message, String response);
 unsigned long getWordReply(String response, byte bytesBack);
+uint16_t readVP(uint16_t vpAddress);
 //set some variable values
 uint16_t v1000var = 0x55AA;
 uint16_t v1001var = 0x6677;
@@ -111,6 +109,9 @@ void loop()
   hmi.readVPWord(0x1000, 1);
   //or read 2 words back from vp's 0x1000-0x1001
   //hmi.readVPWord(0x1000, 2);
+  
+  // or the easy way without the event
+  Serial.println(readVP(0x1000));
 
   //increment our vars before write at top of loop 
   v1000var ++;
@@ -164,3 +165,10 @@ unsigned long getWordReply(String response, byte bytesBack){
   index = index - bytesBack;
   return((unsigned long) strtol(strings[index-1], NULL, 16) << 8) + (unsigned long) strtol(strings[index], NULL, 16);
 }
+
+// Read word from VP address
+uint16_t readVP(uint16_t vpAddress)
+{
+    return (hmi.readVPByte(vpAddress,1) << 8) + hmi.readVPByte(vpAddress) ;
+}
+

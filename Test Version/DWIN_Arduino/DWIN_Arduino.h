@@ -1,8 +1,7 @@
 /*
-* DWIN DGUS DWIN Library for Arduino
+* DWIN DGUS DWIN Library for Arduino Uno | ESP32 
 * This Library Supports all Basic Function
 * Created by Tejeet ( tejeet@dwin.com.cn ) 
-* Updated by ( satspares@gmail.com )
 * Please Checkout Latest Offerings FROM DWIN 
 * Here : https://www.dwin-global.com/
 */
@@ -61,6 +60,8 @@ public:
 
     // PUBLIC Methods
 
+    // dont look for the ack on no response kernels
+    void ackDisabled(bool noACK);
     void echoEnabled(bool enabled);
     // Listen Touch Events & Messages from HMI
     void listen();
@@ -130,9 +131,10 @@ private:
 
     Stream* _dwinSerial;   // DWIN Serial interface
     bool _isSoft;          // Is serial interface software
-    long _baud;              // DWIN HMI Baud rate
-    bool _echo;            // Response Command Show
+    long _baud;             // DWIN HMI Baud rate
+    bool _echo = false;     // Response Command Show
     bool _isConnected;     // Flag set on successful communication
+    bool _noACK = false;   // No ack used with no response kernel 
 
     bool cbfunc_valid;
     hmiListener listenerCallback;

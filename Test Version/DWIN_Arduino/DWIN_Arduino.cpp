@@ -76,6 +76,11 @@ void DWIN::echoEnabled(bool echoEnabled)
     _echo = echoEnabled;
 }
 
+void DWIN::ackDisabled(bool noACK)
+{
+    _noACK = noACK;
+}
+
 // Get Hardware Firmware Version of DWIN HMI
 double DWIN::getHWVersion()
 { //  HEX(5A A5 04 83 00 0F 01)
@@ -261,8 +266,8 @@ void DWIN::sendArray(byte dwinSendArray[],byte arraySize)
     byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, arraySize};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     _dwinSerial->write(dwinSendArray,arraySize);
-    //dont look for the ack. on read as this can cause a read error
-    if (dwinSendArray[0] != 0x83) 
+    //dont look for the ack. on read 
+    if (dwinSendArray[0] == CMD_WRITE) 
     {  
      readDWIN();
     }
@@ -291,6 +296,10 @@ void DWIN::listen()
 
 String DWIN::readDWIN()
 {
+    String resp = "";
+    if (_noACK){
+      return resp;   // using no response kernel
+    } 
     //* This has to only be enabled for Software serial
 #if defined(DWIN_SOFTSERIAL)
     if (_isSoft)
@@ -299,7 +308,7 @@ String DWIN::readDWIN()
     }
 #endif
 
-    String resp;
+ 
     unsigned long startTime = millis(); // Start time for Timeout
     
     while ((millis() - startTime < READ_TIMEOUT)) 

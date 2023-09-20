@@ -28,3 +28,10 @@ float readFloatValue(uint16_t vpAddress)
 
 // Write long value to VP address
 void writeLongValue(uint16_t vpAddress,unsigned long lValue)
+
+/**
+ * Used in the callback event onHMIEvent
+ * Get the last 2 bytes returned from hmi for our use if bytesBack = 0
+ * If bytesBack = 2 get the 2 previous bytes etc.
+ */
+unsigned long getWordReply(String response, byte bytesBack)

@@ -21,7 +21,7 @@ Added some helpers in DWIN_Arduino_Helpers.h
 uint16_t readVP(uint16_t vpAddress)
 
 // Read long value from VP address
-unsigned long readLongValue(u_int16_t vpAddress)
+unsigned long readLongValue(uint16_t vpAddress)
 
 // Read float value from VP address
 float readFloatValue(uint16_t vpAddress)

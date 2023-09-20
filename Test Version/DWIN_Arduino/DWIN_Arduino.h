@@ -105,7 +105,7 @@ public:
     //set float value to 32bit DATA Variable Control  
     void setFloatValue(long vpAddress, float fValue);
     // Send array to the display we dont need the 5A A5 or 
-    // the size byte hopefully we can worh this out.
+    // the size byte hopefully we can work this out.
     //byte hmiArray[] = {0x83,0x10,0x00,0x1};        // Read 0x1000 one word returns in the rx event
     //byte hmiArray[] = {0x82,0x88,0x00,0x55,0xAA};  // Write 0x1000
     //hmi.sendArray(hmiArray,sizeof(hmiArray));

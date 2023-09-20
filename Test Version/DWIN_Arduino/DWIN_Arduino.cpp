@@ -208,12 +208,12 @@ void DWIN::readVPWord(long address, byte numWords)
 }
 
 // read byte from VP Address
-byte DWIN::readVPByte(long address, bool hiWord)
+byte DWIN::readVPByte(long address, bool hiByte)
 {
     // 0x5A, 0xA5, 0x04, 0x83, hiVPaddress, loVPaddress, 0x01)
     byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x04, CMD_READ, (uint8_t)((address >> 8) & 0xFF), (uint8_t)((address)&0xFF),0x1};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
-    return readCMDLastByte(hiWord);
+    return readCMDLastByte(hiByte);
 }
 
 // read or write the NOR from/to VP must be on a even address 2 word are written or read
@@ -257,10 +257,7 @@ void DWIN::setFloatValue(long vpAddress, float fValue){
 }
 
 // Send array to the display we dont need the 5A A5 or 
-// the size byte hopefully we can worh this out.
-//byte hmiArray[] = {0x83,0x10,0x00,0x1};        // Read 0x1000 one word returns in the rx event
-//byte hmiArray[] = {0x82,0x88,0x00,0x55,0xAA};  // Write 0x1000
-//hmi.sendArray(hmiArray,sizeof(hmiArray));
+// the size byte hopefully we can work this out.
 void DWIN::sendArray(byte dwinSendArray[],byte arraySize)
 {
     byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, arraySize};

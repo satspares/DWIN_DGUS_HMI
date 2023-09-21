@@ -29,6 +29,11 @@ DWIN::DWIN(HardwareSerial &port, long baud, bool initSerial)
     }
 }
 
+#elif ARDUINO_ARCH_STM32
+DWIN::DWIN(HardwareSerial &port){
+    init((Stream *)&port, false);
+}
+
 #elif defined(ESP32)
 DWIN::DWIN(HardwareSerial &port, uint8_t receivePin, uint8_t transmitPin, long baud)
 {

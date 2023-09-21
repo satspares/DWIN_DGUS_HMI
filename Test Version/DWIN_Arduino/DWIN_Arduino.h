@@ -41,7 +41,11 @@ public:
     // Using Pico Board
     #elif defined(ARDUINO_ARCH_RP2040)
     DWIN(HardwareSerial& port, long baud , bool initSerial);
- 
+
+    //Using STM32 Arduino
+    #elif ARDUINO_ARCH_STM32
+    DWIN(HardwareSerial &port);
+
     // Using ESP32 Board
     #elif defined(ESP32)
     DWIN(HardwareSerial& port, uint8_t receivePin, uint8_t transmitPin, long baud=DWIN_DEFAULT_BAUD_RATE);

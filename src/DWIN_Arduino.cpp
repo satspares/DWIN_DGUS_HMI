@@ -29,6 +29,11 @@ DWIN::DWIN(HardwareSerial &port, long baud, bool initSerial)
     }
 }
 
+#elif ARDUINO_ARCH_STM32
+DWIN::DWIN(HardwareSerial &port){
+    init((Stream *)&port, false);
+}
+
 #elif defined(ESP32)
 DWIN::DWIN(HardwareSerial &port, uint8_t receivePin, uint8_t transmitPin, long baud)
 {
@@ -74,6 +79,11 @@ void DWIN::init(Stream *port, bool isSoft)
 void DWIN::echoEnabled(bool echoEnabled)
 {
     _echo = echoEnabled;
+}
+
+void DWIN::ackDisabled(bool noACK)
+{
+    _noACK = noACK;
 }
 
 // Get Hardware Firmware Version of DWIN HMI
@@ -203,12 +213,12 @@ void DWIN::readVPWord(long address, byte numWords)
 }
 
 // read byte from VP Address
-byte DWIN::readVPByte(long address, bool hiWord)
+byte DWIN::readVPByte(long address, bool hiByte)
 {
     // 0x5A, 0xA5, 0x04, 0x83, hiVPaddress, loVPaddress, 0x01)
     byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x04, CMD_READ, (uint8_t)((address >> 8) & 0xFF), (uint8_t)((address)&0xFF),0x1};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
-    return readCMDLastByte(hiWord);
+    return readCMDLastByte(hiByte);
 }
 
 // read or write the NOR from/to VP must be on a even address 2 word are written or read
@@ -252,17 +262,14 @@ void DWIN::setFloatValue(long vpAddress, float fValue){
 }
 
 // Send array to the display we dont need the 5A A5 or 
-// the size byte hopefully we can worh this out.
-//byte hmiArray[] = {0x83,0x10,0x00,0x1};        // Read 0x1000 one word returns in the rx event
-//byte hmiArray[] = {0x82,0x88,0x00,0x55,0xAA};  // Write 0x1000
-//hmi.sendArray(hmiArray,sizeof(hmiArray));
+// the size byte hopefully we can work this out.
 void DWIN::sendArray(byte dwinSendArray[],byte arraySize)
 {
     byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, arraySize};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     _dwinSerial->write(dwinSendArray,arraySize);
-    //dont look for the ack. on read as this can cause a read error
-    if (dwinSendArray[0] != 0x83) 
+    //dont look for the ack. on read 
+    if (dwinSendArray[0] == CMD_WRITE) 
     {  
      readDWIN();
     }
@@ -291,6 +298,10 @@ void DWIN::listen()
 
 String DWIN::readDWIN()
 {
+    String resp = "";
+    if (_noACK){
+      return resp;   // using no response kernel
+    } 
     //* This has to only be enabled for Software serial
 #if defined(DWIN_SOFTSERIAL)
     if (_isSoft)
@@ -299,7 +310,7 @@ String DWIN::readDWIN()
     }
 #endif
 
-    String resp;
+ 
     unsigned long startTime = millis(); // Start time for Timeout
     
     while ((millis() - startTime < READ_TIMEOUT)) 
@@ -395,7 +406,7 @@ String DWIN::handle()
     return response;
 }
 
-byte DWIN::readCMDLastByte(bool hiWord)
+byte DWIN::readCMDLastByte(bool hiByte)
 {
     //* This has to only be enabled for Software serial
 #if defined(DWIN_SOFTSERIAL)
@@ -416,7 +427,7 @@ byte DWIN::readCMDLastByte(bool hiWord)
             lastByte = _dwinSerial->read();
         }
     }
-    if (hiWord){
+    if (hiByte){
       return previousByte;
     }else{
       return lastByte;  

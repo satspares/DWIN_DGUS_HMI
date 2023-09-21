@@ -2,7 +2,7 @@
 * DWIN DGUS DWIN Library for Arduino
 * This Library Supports all Basic Function
 * Created by Tejeet ( tejeet@dwin.com.cn ) 
-* Updated by ( satspares@gmail.com )
+* Updated by Satspares ( satspares@gmail.com )
 * Please Checkout Latest Offerings FROM DWIN 
 * Here : https://www.dwin-global.com/
 */
@@ -41,7 +41,11 @@ public:
     // Using Pico Board
     #elif defined(ARDUINO_ARCH_RP2040)
     DWIN(HardwareSerial& port, long baud , bool initSerial);
- 
+
+    //Using STM32 Arduino
+    #elif ARDUINO_ARCH_STM32
+    DWIN(HardwareSerial &port);
+
     // Using ESP32 Board
     #elif defined(ESP32)
     DWIN(HardwareSerial& port, uint8_t receivePin, uint8_t transmitPin, long baud=DWIN_DEFAULT_BAUD_RATE);
@@ -61,6 +65,8 @@ public:
 
     // PUBLIC Methods
 
+    // dont look for the ack on no response kernels
+    void ackDisabled(bool noACK);
     void echoEnabled(bool enabled);
     // Listen Touch Events & Messages from HMI
     void listen();
@@ -104,7 +110,7 @@ public:
     //set float value to 32bit DATA Variable Control  
     void setFloatValue(long vpAddress, float fValue);
     // Send array to the display we dont need the 5A A5 or 
-    // the size byte hopefully we can worh this out.
+    // the size byte hopefully we can work this out.
     //byte hmiArray[] = {0x83,0x10,0x00,0x1};        // Read 0x1000 one word returns in the rx event
     //byte hmiArray[] = {0x82,0x88,0x00,0x55,0xAA};  // Write 0x1000
     //hmi.sendArray(hmiArray,sizeof(hmiArray));
@@ -130,9 +136,10 @@ private:
 
     Stream* _dwinSerial;   // DWIN Serial interface
     bool _isSoft;          // Is serial interface software
-    long _baud;              // DWIN HMI Baud rate
-    bool _echo;            // Response Command Show
+    long _baud;             // DWIN HMI Baud rate
+    bool _echo = false;     // Response Command Show
     bool _isConnected;     // Flag set on successful communication
+    bool _noACK = false;   // No ack used with no response kernel 
 
     bool cbfunc_valid;
     hmiListener listenerCallback;

@@ -2,6 +2,7 @@
 Arduino Library for DWIN DGUS T5L HMI Display
 Supporting Features.
 - getHWVersion()
+- getGUISoftVersion()
 - restartHMI()
 - setPage()
 - getPage()
@@ -17,9 +18,10 @@ Supporting Features.
 - norReadWrite()
 - setVPWord()
 - readVPWord()
-- readVPByte()
+- readVPByte()   //see .h file
 - setTextColor()
 - setFloatValue()
+- sendArray()   // see .h file
 
 30-June-2023 added playSound() changed lib. name to DWIN_Arduino to avoid naming clashes
 added hardware serial for Arduino Mega etc.
@@ -40,7 +42,13 @@ added hardware serial for Arduino Mega etc.
 
 07-September-2023 added setFloatValue Function
 
-15-September-2023 add Test Version
+15-September-2023 add Test Version Directory
+
+29-September-2023 add STM32 to Library
+
+29-September-2023 add some helper functions in DWIN_Arduino_Helpers.txt
+
+29-September-2-23 add sendArray Function
 
 ## Usage
 Download the Library and extract the folder in the libraries of Arduino IDE,

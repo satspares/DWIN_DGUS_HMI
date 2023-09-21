@@ -406,7 +406,7 @@ String DWIN::handle()
     return response;
 }
 
-byte DWIN::readCMDLastByte(bool hiWord)
+byte DWIN::readCMDLastByte(bool hiByte)
 {
     //* This has to only be enabled for Software serial
 #if defined(DWIN_SOFTSERIAL)
@@ -427,7 +427,7 @@ byte DWIN::readCMDLastByte(bool hiWord)
             lastByte = _dwinSerial->read();
         }
     }
-    if (hiWord){
+    if (hiByte){
       return previousByte;
     }else{
       return lastByte;  

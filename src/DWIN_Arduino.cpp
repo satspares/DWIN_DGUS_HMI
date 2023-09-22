@@ -10,7 +10,7 @@
 #define MAX_ASCII 255
 
 #define CMD_READ_TIMEOUT 50
-#define READ_TIMEOUT 100 //we dont need this much
+#define READ_TIMEOUT 100 
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(FORCEHWSERIAL)
 DWIN::DWIN(HardwareSerial &port, long baud)
@@ -71,7 +71,6 @@ DWIN::DWIN(uint8_t rx, uint8_t tx, long baud)
 
 void DWIN::init(Stream *port, bool isSoft)
 {
-    // Serial.println();
     this->_dwinSerial = port;
     this->_isSoft = isSoft;
 }
@@ -186,7 +185,7 @@ void DWIN::setText(long address, String textData)
     readDWIN();
 }
 
-// Set Data on VP Address
+// Set Byte Data on VP Address
 void DWIN::setVP(long address, byte data)
 {
     // 0x5A, 0xA5, 0x05, 0x82, 0x40, 0x20, 0x00, state
@@ -204,7 +203,7 @@ void DWIN::setVPWord(long address, int data)
     readDWIN();
 }
 
-// read WordData from VP Address you can read sequential multiple words
+// read WordData from VP Address you can read sequential multiple words returned in rx event
 void DWIN::readVPWord(long address, byte numWords)
 {
     // 0x5A, 0xA5, 0x04, 0x83, hiVPaddress, loVPaddress, 0x01 (1 vp to read)
@@ -212,7 +211,7 @@ void DWIN::readVPWord(long address, byte numWords)
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
 }
 
-// read byte from VP Address
+// read byte from VP Address (if hiByte = true read HiByte of word)
 byte DWIN::readVPByte(long address, bool hiByte)
 {
     // 0x5A, 0xA5, 0x04, 0x83, hiVPaddress, loVPaddress, 0x01)
@@ -268,7 +267,7 @@ void DWIN::sendArray(byte dwinSendArray[],byte arraySize)
     byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, arraySize};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     _dwinSerial->write(dwinSendArray,arraySize);
-    //dont look for the ack. on read 
+    //look for the ack. on write 
     if (dwinSendArray[0] == CMD_WRITE) 
     {  
      readDWIN();
@@ -292,8 +291,7 @@ void DWIN::hmiCallBack(hmiListener callBack)
 // Listen For incoming callback  event from HMI
 void DWIN::listen()
 {
-      handle();
-     
+      handle();    
 }
 
 String DWIN::readDWIN()

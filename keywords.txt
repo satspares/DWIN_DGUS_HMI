@@ -28,6 +28,7 @@ setRTCSOFT                  KEYWORD2
 setVPWord                   KEYWORD2
 readVPWord                  KEYWORD2
 setTextColor                KEYWORD2
+setFloatValue               KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

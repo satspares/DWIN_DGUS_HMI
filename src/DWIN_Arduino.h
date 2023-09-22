@@ -49,13 +49,12 @@ public:
     // Using ESP32 Board
     #elif defined(ESP32)
     DWIN(HardwareSerial& port, uint8_t receivePin, uint8_t transmitPin, long baud=DWIN_DEFAULT_BAUD_RATE);
-   // DWIN(HardwareSerial* port, uint8_t receivePin, uint8_t transmitPin, long baud=DWIN_DEFAULT_BAUD_RATE) : DWIN(*port, receivePin, transmitPin, baud) {};
     
     // Using ESP8266 Board
     #elif defined(ESP8266)
     DWIN(uint8_t receivePin, uint8_t transmitPin, long baud=DWIN_DEFAULT_BAUD_RATE);
     DWIN(SoftwareSerial& port, long baud=DWIN_DEFAULT_BAUD_RATE);
-    DWIN(Stream& port, uint8_t long baud=DWIN_DEFAULT_BAUD_RATE);
+    DWIN(Stream& port, long baud=DWIN_DEFAULT_BAUD_RATE);
 
     // Using Arduino Board
     #else
@@ -88,11 +87,11 @@ public:
     void setText(long address, String textData);
     // set Byte on VP Address
     void setVP(long address, byte data);
-    // read byte from VP Address
+    // read byte from VP Address if bool = true read HiByte
     byte readVPByte(long address, bool = 0);
     // Set WordData on VP Address
     void setVPWord(long address, int data);
-    // read WordData from VP Address you can read sequential multiple words 
+    // read WordData from VP Address you can read sequential multiple words (data returned in rx event) 
     void readVPWord(long address, byte numWords);
     // read or write the NOR from/to VP must be on a even address 2 word are written or read
     void norReadWrite(bool write,long VPAddress,long NORAddress);
@@ -136,8 +135,8 @@ private:
 
     Stream* _dwinSerial;   // DWIN Serial interface
     bool _isSoft;          // Is serial interface software
-    long _baud;             // DWIN HMI Baud rate
-    bool _echo = false;     // Response Command Show
+    long _baud;            // DWIN HMI Baud rate
+    bool _echo = false;    // Response Command Show
     bool _isConnected;     // Flag set on successful communication
     bool _noACK = false;   // No ack used with no response kernel 
 
@@ -145,7 +144,7 @@ private:
     hmiListener listenerCallback;
 
     void init(Stream* port, bool isSoft); 
-    byte readCMDLastByte(bool hiWord = 0);
+    byte readCMDLastByte(bool hiByte = 0);
     String readDWIN();
     String handle();
     String checkHex(byte currentNo);

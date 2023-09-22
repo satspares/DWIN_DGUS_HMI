@@ -48,7 +48,7 @@ added hardware serial for Arduino Mega etc.
 
 29-September-2023 add some helper functions in DWIN_Arduino_Helpers.txt
 
-29-September-2-2023 add sendArray Function
+29-September-2023 add sendArray Function
 
 ## Usage
 Download the Library and extract the folder in the libraries of Arduino IDE,

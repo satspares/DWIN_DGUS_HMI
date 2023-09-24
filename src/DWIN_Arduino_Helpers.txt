@@ -66,3 +66,24 @@ unsigned long getWordReply(String response, byte bytesBack){
   index = index - bytesBack;
   return((unsigned long) strtol(strings[index-1], NULL, 16) << 8) + (unsigned long) strtol(strings[index], NULL, 16);
 }
+
+
+// noWords should be your char length / 2
+// eg. read 12 chars Serial.println(readVPText(0x2300,6)) ;
+String readVPText(uint16_t vpAddress,byte noWords){
+  int i = 0;
+  bool nextByte = true; //true = read first char
+  byte byteRead = 0;
+  String textMessage;
+  while(i < noWords){
+    byteRead = hmi.readVPByte((vpAddress+i),nextByte);
+    // 128 can be 254 for extended ascii
+    if ((byteRead < 32) || (byteRead > 128)){
+      break;
+    }
+    textMessage += char(byteRead);
+    nextByte = ! nextByte;
+    if (nextByte){i++;}
+  }
+  return textMessage;
+}

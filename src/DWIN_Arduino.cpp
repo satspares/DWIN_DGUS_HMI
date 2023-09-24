@@ -354,7 +354,8 @@ String DWIN::handle()
             if (inhex == 90 || inhex == 165)
             { // 5A A5
                 isFirstByte = true;
-                 
+                message = "";
+                address = ""; 
                 response.concat(checkHex(inhex) + " ");
                 continue;
             }

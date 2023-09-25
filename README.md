@@ -8,7 +8,7 @@ Supporting Features.
 - getPage()
 - setBrightness()
 - getBrightness()
-- setVP()
+- setVPByte()
 - setText()
 - beepHMI()
 - listenEvents()

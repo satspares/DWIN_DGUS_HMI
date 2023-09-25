@@ -1,4 +1,8 @@
-Added STM32 Arduino to library
+Made alias for void setVP(long address, byte data); to void setVPByte(long address, byte data);
+Makes more sense.
+
+Added STM32 Arduino to library.
+
 // hmi.readVPByte can now read hi or low byte
   hmi.setVPWord(0x2000,0xAA55);
   Serial.println(hmi.readVPByte(0x2000),HEX);   //optional bool parameter or hmi.readVPByte(0x2000,0)

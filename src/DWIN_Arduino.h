@@ -85,7 +85,8 @@ public:
     byte getBrightness();
     // set Data on VP Address
     void setText(long address, String textData);
-    // set Byte on VP Address
+    // // Set Byte Data on VP Address makes more sense
+    void setVPByte(long address, byte data); //alias of below
     void setVP(long address, byte data);
     // read byte from VP Address if bool = true read HiByte
     byte readVPByte(long address, bool = 0);

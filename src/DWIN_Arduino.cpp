@@ -184,8 +184,10 @@ void DWIN::setText(long address, String textData)
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }
-
-// Set Byte Data on VP Address
+    // Set Byte Data on VP Address makes more sense alias of below
+void DWIN::setVPByte(long address, byte data){  
+    setVP(address, data);
+ }
 void DWIN::setVP(long address, byte data)
 {
     // 0x5A, 0xA5, 0x05, 0x82, 0x40, 0x20, 0x00, state

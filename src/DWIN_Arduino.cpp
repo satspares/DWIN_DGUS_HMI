@@ -276,6 +276,33 @@ void DWIN::sendArray(byte dwinSendArray[],byte arraySize)
     }
 }
 
+    // Send int array to the display we dont need the 5A A5 or size - even words only
+void DWIN::sendIntArray(uint16_t instruction,uint16_t dwinIntArray[],byte arraySize){
+    if (instruction <= 0xFF){
+        byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, (uint8_t)((arraySize + 1)),(uint8_t)((instruction)&0xFF) };
+        _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
+    }
+    else // instruction > 0xFF
+    {
+        byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, (uint8_t)((arraySize + 2)),(uint8_t)((instruction >> 8) & 0xFF), (uint8_t)((instruction)&0xFF) };
+        _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
+    }
+    byte j = 0;
+    byte dwinSendByteArray[arraySize];
+    for (int i = 0; i < (arraySize >> 1) ; i++) {
+    dwinSendByteArray[j] = (uint8_t)((dwinIntArray[i] >> 8) & 0xFF);
+    j ++;
+    dwinSendByteArray[j] = (uint8_t)((dwinIntArray[i])&0xFF);
+    j ++;
+    }
+    _dwinSerial->write(dwinSendByteArray,arraySize);
+    //look for the ack. on write
+    if ((uint8_t)((instruction)&0xFF) == CMD_WRITE) { // or some others?
+        readDWIN();
+    }
+
+}
+
 
 // init the serial port in setup useful for Pico boards
 void DWIN::initSerial(HardwareSerial &port, long baud)

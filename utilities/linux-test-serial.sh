@@ -9,11 +9,13 @@ exec 3<$SerialPort
   cat <&3 > tty.hex &
   PID=$!
     # turn page to page 1
-#     printf "%b" '\x5A\xA5\x07\x82\x00\x84\x5A\x01\x00\x01' > $SerialPort
+    # printf "%b" '\x5A\xA5\x07\x82\x00\x84\x5A\x01\x00\x01' > $SerialPort
     # returns versions
-     printf "%b" '\x5A\xA5\x04\x83\x00\x0F\x01' > $SerialPort
+      printf "%b" '\x5A\xA5\x04\x83\x00\x0F\x01' > $SerialPort
     # sound the beep if turned on in config
-#    printf "%b" '\x5A\xA5\x05\x82\x00\xA0\x00\x7D' > $SerialPort
+    # printf "%b" '\x5A\xA5\x05\x82\x00\xA0\x00\x7D' > $SerialPort
+    # reboot display
+    # printf "%b" '\x5A\xA5\x07\x82\x00\x04\x55\xAA\x5A\xA5' > $SerialPort
     # play sound no 2 if sound turned on in config
 #     printf "%b" '\x5A\xA5\x07\x82\x00\xA0\x02\x01\x40\x00' > $SerialPort
 #     Write and read vp

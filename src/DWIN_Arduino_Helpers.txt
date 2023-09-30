@@ -21,7 +21,7 @@ unsigned long readLongValue(uint16_t vpAddress){
 }
 
 // Read float value from VP address
-float readFloatValue( vpAddress){
+float readFloatValue(uint16_t vpAddress){
  
     byte data[4] = {0,0,0,0};
     float fValue;

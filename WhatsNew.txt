@@ -31,7 +31,7 @@ Added STM32 Arduino to library.
 //byte hmiArray[] = {0x82,0x88,0x00,0x55,0xAA};  // Write 0x1000
 hmi.sendArray(hmiArray,sizeof(hmiArray));
 
-Added some helpers in DWIN_Arduino_Helpers.txt
+Added some helpers in DWIN_Arduino_Helpers.hpp
 // Read word from VP address
 uint16_t readVP(uint16_t vpAddress)
 

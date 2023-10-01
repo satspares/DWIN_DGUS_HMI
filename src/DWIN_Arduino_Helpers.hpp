@@ -1,4 +1,7 @@
 //copy required function(s) into your code
+//or include after
+//DWIN hmi(DGUS_SERIAL, 115200 ... etc
+//#include "DWIN_Arduino_Helpers.hpp"
 
 // Read word from VP address
 uint16_t readVP(uint16_t vpAddress)

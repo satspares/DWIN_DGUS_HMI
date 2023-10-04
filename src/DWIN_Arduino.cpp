@@ -119,7 +119,7 @@ void DWIN::setBrightness(byte brightness)
     readDWIN();
 }
 
-// SET DWIN Brightness
+// GET DWIN Brightness
 byte DWIN::getBrightness()
 {
     byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x04, CMD_READ, 0x00, 0x31, 0x01};

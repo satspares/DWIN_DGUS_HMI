@@ -222,7 +222,7 @@ byte DWIN::readVPByte(long address, bool hiByte)
     return readCMDLastByte(hiByte);
 }
 
-// read or write the NOR from/to VP must be on a even address 2 word are written or read
+// read or write the NOR from/to VP must be on a even address 2 words are written or read
 void DWIN::norReadWrite(bool write, long VPAddress, long NORAddress)
 {
     byte readWrite;
@@ -266,9 +266,11 @@ void DWIN::setFloatValue(long vpAddress, float fValue){
 // the size byte hopefully we can work this out.
 void DWIN::sendArray(byte dwinSendArray[],byte arraySize)
 {
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, arraySize};
+    byte sendBuffer[3+arraySize] = {CMD_HEAD1, CMD_HEAD2, arraySize};
+
+    memcpy(sendBuffer + 3, dwinSendArray, arraySize);
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
-    _dwinSerial->write(dwinSendArray,arraySize);
+
     //look for the ack. on write 
     if (dwinSendArray[0] == CMD_WRITE) 
     {  
@@ -276,26 +278,23 @@ void DWIN::sendArray(byte dwinSendArray[],byte arraySize)
     }
 }
 
-    // Send int array to the display we dont need the 5A A5 or size - words only
+    // Send int array to the display we dont need the 5A A5 or size - even words only
 void DWIN::sendIntArray(uint16_t instruction,uint16_t dwinIntArray[],byte arraySize){
-    if (instruction <= 0xFF){
-        byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, (uint8_t)((arraySize + 1)),(uint8_t)((instruction)&0xFF) };
-        _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
-    }
-    else // instruction > 0xFF
-    {
-        byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, (uint8_t)((arraySize + 2)),(uint8_t)((instruction >> 8) & 0xFF), (uint8_t)((instruction)&0xFF) };
-        _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
-    }
+
+    // turn our int array to array of bytes
     byte j = 0;
     byte dwinSendByteArray[arraySize];
     for (int i = 0; i < (arraySize >> 1) ; i++) {
-    dwinSendByteArray[j] = (uint8_t)((dwinIntArray[i] >> 8) & 0xFF);
-    j ++;
-    dwinSendByteArray[j] = (uint8_t)((dwinIntArray[i])&0xFF);
-    j ++;
+        dwinSendByteArray[j] = (uint8_t)((dwinIntArray[i] >> 8) & 0xFF);
+        j ++;
+        dwinSendByteArray[j] = (uint8_t)((dwinIntArray[i])&0xFF);
+        j ++;
     }
-    _dwinSerial->write(dwinSendByteArray,arraySize);
+
+    byte sendBuffer[4 + sizeof(dwinSendByteArray)] = {CMD_HEAD1, CMD_HEAD2, (uint8_t)((arraySize + 1)),(uint8_t)((instruction)&0xFF) };
+    memcpy(sendBuffer + 4, dwinSendByteArray, sizeof(dwinSendByteArray));
+    _dwinSerial->write(sendBuffer,sizeof(sendBuffer));
+          
     //look for the ack. on write
     if ((uint8_t)((instruction)&0xFF) == CMD_WRITE) { // or some others?
         readDWIN();

@@ -170,17 +170,17 @@ void DWIN::setRTCSOFT(byte year, byte month, byte day, byte weekday, byte hour, 
 // Set Text on VP Address
 void DWIN::setText(long address, String textData)
 {
-
+    byte ffEnding[2] = {0xFF,0xFF};
     int dataLen = textData.length();
-    byte startCMD[] = {CMD_HEAD1, CMD_HEAD2, (uint8_t)(dataLen + 3), CMD_WRITE,
+    byte startCMD[] = {CMD_HEAD1, CMD_HEAD2, (uint8_t)(dataLen + 5), CMD_WRITE,
                        (uint8_t)((address >> 8) & 0xFF), (uint8_t)((address)&0xFF)};
     byte dataCMD[dataLen];
     textData.getBytes(dataCMD, dataLen + 1);
-    byte sendBuffer[6 + dataLen];
+    byte sendBuffer[8 + dataLen];
 
     memcpy(sendBuffer, startCMD, sizeof(startCMD));
     memcpy(sendBuffer + 6, dataCMD, sizeof(dataCMD));
-
+    memcpy(sendBuffer + (6 + sizeof(dataCMD)),ffEnding,2); // add ending 0xFFFF
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }

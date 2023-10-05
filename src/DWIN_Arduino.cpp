@@ -278,7 +278,7 @@ void DWIN::sendArray(byte dwinSendArray[],byte arraySize)
     }
 }
 
-    // Send int array to the display we dont need the 5A A5 or size - even words only
+    // Send int array to the display we dont need the 5A A5 or size - words only
 void DWIN::sendIntArray(uint16_t instruction,uint16_t dwinIntArray[],byte arraySize){
 
     // turn our int array to array of bytes

@@ -117,7 +117,7 @@ public:
     //hmi.sendArray(hmiArray,sizeof(hmiArray));
     void sendArray(byte dwinSendArray[],byte arraySize);
 
-    // Send int array to the display we dont need the 5A A5 or size - even words only
+    // Send int array to the display we dont need the 5A A5 or size - words only
     // eg. Using Basic Graphic Control vp 0x5000
     //  uint16_t intArrayRect[] = {0x5000,0x0003,0x0001,200,100,650,400,0xFFF0,0xFF00};
     //  Fill it with Yellow

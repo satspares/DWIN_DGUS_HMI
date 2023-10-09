@@ -39,8 +39,8 @@ float readFloatValue(uint16_t vpAddress){
 
 // Write long value to VP address
 void writeLongValue(uint16_t vpAddress,unsigned long lValue){
-    hmi.setVPWord(vpAddress,(lValue >> 16));
     hmi.setVPWord((vpAddress+1), (lValue & 0xFFFF));
+    hmi.setVPWord(vpAddress,(lValue >> 16));
 }
 
 

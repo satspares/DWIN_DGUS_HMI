@@ -3,6 +3,8 @@
 //DWIN hmi(DGUS_SERIAL, 115200 ... etc
 //#include "DWIN_Arduino_Helpers.hpp"
 
+
+
 // Read word from VP address
 uint16_t readVP(uint16_t vpAddress)
 {
@@ -89,4 +91,16 @@ String readVPText(uint16_t vpAddress,byte noWords){
     if (nextByte){i++;}
   }
   return textMessage;
+}
+
+
+const byte rotate0=0; const byte rotate90=1;
+const byte rotate180=2; const byte rotate270=3;
+//rotate the screen  eg. setScreenRotate(rotate270); // flip the screen
+void setScreenRotate(byte angle)
+{
+   uint16_t vp81 = readVP(0x0081);
+   vp81 = (vp81 & 0xFFFC);
+   hmi.setVPWord(0x0081,(vp81 + angle));
+   hmi.setVPWord(0x0080,0x5A00);  // set it.
 }

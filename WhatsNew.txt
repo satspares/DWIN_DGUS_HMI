@@ -1,3 +1,5 @@
+Added setScreenRotate(byte angle) to DWIN_Arduino_Helpers.hpp
+
 // Send int array to the display we dont need the 5A A5 or size - even words only
   // eg. Using Basic Graphic Control vp 0x5000
   // Display rectangle 

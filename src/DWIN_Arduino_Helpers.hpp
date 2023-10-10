@@ -99,8 +99,6 @@ const byte rotate180=2; const byte rotate270=3;
 //rotate the screen  eg. setScreenRotate(rotate270); // flip the screen
 void setScreenRotate(byte angle)
 {
-   uint16_t vp81 = readVP(0x0081);
-   vp81 = (vp81 & 0xFFFC);
-   hmi.setVPWord(0x0081,(vp81 + angle));
+   hmi.setVPWord(0x0081,((readVP(0x0081) & 0xFFFC) + angle));
    hmi.setVPWord(0x0080,0x5A00);  // set it.
 }

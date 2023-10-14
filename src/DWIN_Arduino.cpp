@@ -370,7 +370,7 @@ String DWIN::handle()
     String address;
     String message;
     bool isSubstr = false;
-    bool messageEnd = true;
+    bool messageEnd = false;
     bool isFirstByte = false;
     unsigned long startTime = millis();
     while ((millis() - startTime < READ_TIMEOUT))
@@ -389,10 +389,14 @@ String DWIN::handle()
             }
             for (int i = 1; i <= inhex; i++)
             {
-                int inByte = _dwinSerial->read();
+                int inByte = _dwinSerial->read();  
+                if (i == 1) // add missing size byte
+                {
+                     response.concat(checkHex(inhex) + " ");   
+                }                           
                 response.concat(checkHex(inByte) + " ");
                 if (i <= 3)
-                {
+                {               
                     if ((i == 2) || (i == 3))
                     {
                         address.concat(checkHex(inByte));
@@ -401,7 +405,7 @@ String DWIN::handle()
                 }
                 else
                 {
-                    if (messageEnd)
+                    if (messageEnd == false )
                     {
                         if (isSubstr && inByte != MAX_ASCII && inByte >= MIN_ASCII)
                         {
@@ -411,7 +415,7 @@ String DWIN::handle()
                         {
                             if (inByte == MAX_ASCII)
                             {
-                                messageEnd = false;
+                                messageEnd = true;
                             }
                             isSubstr = true;
                         }

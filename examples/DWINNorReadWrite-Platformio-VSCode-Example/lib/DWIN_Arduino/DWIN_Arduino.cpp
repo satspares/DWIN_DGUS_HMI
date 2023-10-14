@@ -119,7 +119,7 @@ void DWIN::setBrightness(byte brightness)
     readDWIN();
 }
 
-// SET DWIN Brightness
+// GET DWIN Brightness
 byte DWIN::getBrightness()
 {
     byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x04, CMD_READ, 0x00, 0x31, 0x01};
@@ -170,22 +170,24 @@ void DWIN::setRTCSOFT(byte year, byte month, byte day, byte weekday, byte hour, 
 // Set Text on VP Address
 void DWIN::setText(long address, String textData)
 {
-
+    byte ffEnding[2] = {0xFF,0xFF};
     int dataLen = textData.length();
-    byte startCMD[] = {CMD_HEAD1, CMD_HEAD2, (uint8_t)(dataLen + 3), CMD_WRITE,
+    byte startCMD[] = {CMD_HEAD1, CMD_HEAD2, (uint8_t)(dataLen + 5), CMD_WRITE,
                        (uint8_t)((address >> 8) & 0xFF), (uint8_t)((address)&0xFF)};
     byte dataCMD[dataLen];
     textData.getBytes(dataCMD, dataLen + 1);
-    byte sendBuffer[6 + dataLen];
+    byte sendBuffer[8 + dataLen];
 
     memcpy(sendBuffer, startCMD, sizeof(startCMD));
     memcpy(sendBuffer + 6, dataCMD, sizeof(dataCMD));
-
+    memcpy(sendBuffer + (6 + sizeof(dataCMD)),ffEnding,2); // add ending 0xFFFF
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }
-
-// Set Byte Data on VP Address
+    // Set Byte Data on VP Address makes more sense alias of below
+void DWIN::setVPByte(long address, byte data){  
+    setVP(address, data);
+ }
 void DWIN::setVP(long address, byte data)
 {
     // 0x5A, 0xA5, 0x05, 0x82, 0x40, 0x20, 0x00, state
@@ -220,7 +222,7 @@ byte DWIN::readVPByte(long address, bool hiByte)
     return readCMDLastByte(hiByte);
 }
 
-// read or write the NOR from/to VP must be on a even address 2 word are written or read
+// read or write the NOR from/to VP must be on a even address 2 words are written or read
 void DWIN::norReadWrite(bool write, long VPAddress, long NORAddress)
 {
     byte readWrite;
@@ -264,14 +266,40 @@ void DWIN::setFloatValue(long vpAddress, float fValue){
 // the size byte hopefully we can work this out.
 void DWIN::sendArray(byte dwinSendArray[],byte arraySize)
 {
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, arraySize};
+    byte sendBuffer[3+arraySize] = {CMD_HEAD1, CMD_HEAD2, arraySize};
+
+    memcpy(sendBuffer + 3, dwinSendArray, arraySize);
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
-    _dwinSerial->write(dwinSendArray,arraySize);
+
     //look for the ack. on write 
     if (dwinSendArray[0] == CMD_WRITE) 
     {  
      readDWIN();
     }
+}
+
+    // Send int array to the display we dont need the 5A A5 or size - words only
+void DWIN::sendIntArray(uint16_t instruction,uint16_t dwinIntArray[],byte arraySize){
+
+    // turn our int array to array of bytes
+    byte j = 0;
+    byte dwinSendByteArray[arraySize];
+    for (int i = 0; i < (arraySize >> 1) ; i++) {
+        dwinSendByteArray[j] = (uint8_t)((dwinIntArray[i] >> 8) & 0xFF);
+        j ++;
+        dwinSendByteArray[j] = (uint8_t)((dwinIntArray[i])&0xFF);
+        j ++;
+    }
+
+    byte sendBuffer[4 + sizeof(dwinSendByteArray)] = {CMD_HEAD1, CMD_HEAD2, (uint8_t)((arraySize + 1)),(uint8_t)((instruction)&0xFF) };
+    memcpy(sendBuffer + 4, dwinSendByteArray, sizeof(dwinSendByteArray));
+    _dwinSerial->write(sendBuffer,sizeof(sendBuffer));
+          
+    //look for the ack. on write
+    if ((uint8_t)((instruction)&0xFF) == CMD_WRITE) { // or some others?
+        readDWIN();
+    }
+
 }
 
 
@@ -342,7 +370,7 @@ String DWIN::handle()
     String address;
     String message;
     bool isSubstr = false;
-    bool messageEnd = true;
+    bool messageEnd = false;
     bool isFirstByte = false;
     unsigned long startTime = millis();
     while ((millis() - startTime < READ_TIMEOUT))
@@ -361,10 +389,14 @@ String DWIN::handle()
             }
             for (int i = 1; i <= inhex; i++)
             {
-                int inByte = _dwinSerial->read();
+                int inByte = _dwinSerial->read();  
+                if (i == 1) // add missing size byte
+                {
+                     response.concat(checkHex(inhex) + " ");   
+                }                           
                 response.concat(checkHex(inByte) + " ");
                 if (i <= 3)
-                {
+                {               
                     if ((i == 2) || (i == 3))
                     {
                         address.concat(checkHex(inByte));
@@ -373,7 +405,7 @@ String DWIN::handle()
                 }
                 else
                 {
-                    if (messageEnd)
+                    if (messageEnd == false )
                     {
                         if (isSubstr && inByte != MAX_ASCII && inByte >= MIN_ASCII)
                         {
@@ -383,7 +415,7 @@ String DWIN::handle()
                         {
                             if (inByte == MAX_ASCII)
                             {
-                                messageEnd = false;
+                                messageEnd = true;
                             }
                             isSubstr = true;
                         }

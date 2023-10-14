@@ -1,3 +1,6 @@
+14-October 2023 fix missing size byte in callback response
+
+
 Added setScreenRotate(byte angle) to DWIN_Arduino_Helpers.hpp
 
 // Send int array to the display we dont need the 5A A5 or size - even words only

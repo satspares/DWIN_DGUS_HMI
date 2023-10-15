@@ -74,10 +74,13 @@ void DWIN::init(Stream *port, bool isSoft)
     this->_dwinSerial = port;
     this->_isSoft = isSoft;
 }
-
 void DWIN::echoEnabled(bool echoEnabled)
 {
     _echo = echoEnabled;
+}
+void DWIN::returnWord(bool retWord )
+{
+   _retWord = retWord;
 }
 
 void DWIN::ackDisabled(bool noACK)
@@ -365,7 +368,8 @@ String DWIN::checkHex(byte currentNo)
 
 String DWIN::handle()
 {
-    int lastByte;
+    int lastBytes;
+    int previousByte; 
     String response;
     String address;
     String message;
@@ -390,10 +394,8 @@ String DWIN::handle()
             for (int i = 1; i <= inhex; i++)
             {
                 int inByte = _dwinSerial->read();  
-                if (i == 1) // add missing size byte
-                {
-                     response.concat(checkHex(inhex) + " ");   
-                }                           
+                if (i == 1)response.concat(checkHex(inhex) + " ");
+                if (i == (inhex-1))previousByte=inByte;                           
                 response.concat(checkHex(inByte) + " ");
                 if (i <= 3)
                 {               
@@ -421,18 +423,19 @@ String DWIN::handle()
                         }
                     }
                 }
-                lastByte = inByte;
+                lastBytes = inByte;
             }
         }
     }
 
-    if (isFirstByte && _echo)
-    {
-        Serial.println("Address : " + address + " | Data : " + String(lastByte, HEX) + " | Message : " + message + " | Response " + response);
-    }
     if (isFirstByte)
     {
-        listenerCallback(address, lastByte, message, response);
+        if (_retWord) lastBytes = (previousByte << 8) + lastBytes;
+        listenerCallback(address, lastBytes, message, response);
+    }
+    if (isFirstByte && _echo)
+    {
+        Serial.println("Address :0x" + address + " | Data :0x" + String(lastBytes, HEX) + " | Message : " + message + " | Response " + response);
     }
     return response;
 }

@@ -67,6 +67,8 @@ public:
     // dont look for the ack on no response kernels
     void ackDisabled(bool noACK);
     void echoEnabled(bool enabled);
+    // if true return word from rx event not byte
+    void returnWord(bool retWord);
     // Listen Touch Events & Messages from HMI
     void listen();
     // Get Version
@@ -129,7 +131,7 @@ public:
 
 
     // Callback Function
-    typedef void (*hmiListener) (String address, int lastByte, String message, String response);
+    typedef void (*hmiListener) (String address, int lastBytes, String message, String response);
 
     // CallBack Method
     void hmiCallBack(hmiListener callBackFunction);
@@ -152,6 +154,7 @@ private:
     bool _echo = false;    // Response Command Show
     bool _isConnected;     // Flag set on successful communication
     bool _noACK = false;   // No ack used with no response kernel 
+    bool _retWord = false; // return word form rx event when true 
 
     bool cbfunc_valid;
     hmiListener listenerCallback;

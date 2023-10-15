@@ -154,7 +154,7 @@ private:
     bool _echo = false;    // Response Command Show
     bool _isConnected;     // Flag set on successful communication
     bool _noACK = false;   // No ack used with no response kernel 
-    bool _retWord = false; // return word form rx event when true 
+    bool _retWord = false; // return word from rx event when true 
 
     bool cbfunc_valid;
     hmiListener listenerCallback;

@@ -2,7 +2,7 @@
 #include <DWIN_Arduino.h>
 //https://github.com/satspares/DWIN_DGUS_HMI
 //doc: T5L_DGUSII-Application-Development-Guide-V2.8-0901.pdf from my github
-// Settings as page 108
+// Settings as page  108
 #define myDebug
 // Soft Serial pins 2 and 3 uno or nano
 DWIN hmi(2, 3, 115200);

@@ -1,4 +1,4 @@
-&# DWIN DGUS HMI Arduino Library forked from dwinhmi/DWIN_DGUS_HMI
+DWIN DGUS HMI Arduino Library forked from dwinhmi/DWIN_DGUS_HMI
 Arduino Library for DWIN DGUS T5L HMI Display
 Supporting Features.
 - getHWVersion()

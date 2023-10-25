@@ -1,0 +1,54 @@
+Supported Distributions
+=======================
+
+CoolTerm runs on these versions (32-bit and 64-bit) of Linux:
+
+  Linux Mint 16 or later
+  CentOS 7.0 or later
+  Ubuntu 14.04 LTS or later
+  Debian 6.0 or later
+  OpenSUSE 11.3 or later
+  Fedora 13 Desktop or later
+  
+CoolTerm for Linux is a portable application and can be installed anywhere on your system.
+
+Note that, on most systems, a standard user does not have sufficient privileges to access the serial port. Therefore, it may be necessary add the current user to the dialout group using the following command (you may need to log out and back in in order for the updated group change to take effect):
+
+   sudo usermod -a -G dialout $USER
+   
+Alternatively, it is also possible to execute CoolTerm with elevated privileges using sudo.
+
+
+Required Libraries
+==================
+
+CoolTerm requires these libraries:
+
+  GTK+ 3 (3.4.1 minimum)
+  glib 2.0
+  glibc-2.11 (32-bit)
+  glibc-2.14 (64-bit)
+  libstdc++.so.6.0.13
+  libunwind8
+
+
+Raspberry Pi Information
+========================
+The Raspberry Pi build of CoolTerm runs on Pi 2 and newer running:
+
+  Raspberry Pi OS
+  Raspbian Buster/Jessie/Stretch
+
+Other single-board computers that are compatible with a 32-bit or 64-bit ARMv7 CPU may also work, but are not officially supported. Raspberry Pi OS (formally Raspbian) is the only supported OS.
+
+Your Raspberry Pi needs the libunwind8 library to be installed, which you can do from the Terminal with this command:
+
+  sudo apt-get install libunwind8
+
+In addition it is always good to keep your Pi up to date with these Terminal commands:
+
+  sudo apt-get update
+  sudo apt-get upgrade
+  
+  
+

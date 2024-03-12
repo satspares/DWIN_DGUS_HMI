@@ -101,7 +101,9 @@ public:
      // Play a sound
     void playSound(byte soundID);
     // beep Buzzer for 1 sec
-    void beepHMI();
+    void beepHMI(long time = 1000);
+    // Enable/Disable beep Buzzer when touch panel is pressed
+    void setTPBeep(bool enable = true);
     // set the hardware RTC The first two digits of the year are automatically added
     void setRTC( byte year, byte month, byte day, byte hour, byte minute, byte second);
     // update the software RTC The first two digits of the year are automatically added

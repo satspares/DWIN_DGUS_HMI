@@ -11,6 +11,7 @@ Supporting Features.
 - setVPByte()
 - setText()
 - beepHMI()
+- setTPBeep()
 - listenEvents()
 - playSound() 
 - setRTC()
@@ -22,6 +23,8 @@ Supporting Features.
 - setTextColor()
 - setFloatValue()
 - sendArray()   // see .h file
+
+12-March-2024 added setTPBeep to enable muting of Touch Screen Buzzer
 
 30-June-2023 added playSound() changed lib. name to DWIN_Arduino to avoid naming clashes
 added hardware serial for Arduino Mega etc.
@@ -99,6 +102,34 @@ void onHMIEvent(String address, int lastByte, String message, String response){
 ```C++
   // Listen HMI Events
   hmi.listen();
+```
+
+### Brightness Control
+```C++
+  // Turn off Backlight
+  hmi.setBrightness(0);
+
+  // Turn on Backlight
+  hmi.setBrightness(100);
+
+  // Get Backlight level
+  int brightness = hmi.getBrightness();
+```
+
+### Buzzer Control
+```C++
+
+  // Sound Buzzer for 1000ms
+  hmi.beepHMI()
+
+  // Short Buzzer Beep
+  hmi.beepHMI(100);
+
+  // Enable Touch Panel Buzzer
+  hmi.setTPBeep(true);
+
+  // Disable Touch Panel Buzzer
+  hmi.setTPBeep(false);
 ```
 
 ---

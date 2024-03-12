@@ -63,6 +63,7 @@ void setup()
   hmi.echoEnabled(false);
   hmi.hmiCallBack(onHMIEvent);
   hmi.setPage(1);
+  hmi.setTPBeep(true);
 }
 
 void loop()

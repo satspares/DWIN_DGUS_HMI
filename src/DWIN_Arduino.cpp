@@ -236,14 +236,34 @@ void DWIN::norReadWrite(bool write, long VPAddress, long NORAddress)
     readDWIN();
     delay(30); // DWIN Docs say - appropriate delay - is this it?
 }
-// beep Buzzer for 1 Sec
-void DWIN::beepHMI()
-{
-    // 0x5A, 0xA5, 0x05, 0x82, 0x00, 0xA0, 0x00, 0x7D
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x05, CMD_WRITE, 0x00, 0xA0, 0x00, 0x7D};
-    _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
-    readDWIN();
+
+// Beep Buzzer for up to 3060ms
+// Defaults to 1000ms, time in millis
+void DWIN::beepHMI(long time = 1000) {
+  long cycles = (time / 8);
+  uint8_t lx = (uint8_t)((cycles)&0xFF);
+  // 0x5A, 0xA5, 0x05, 0x82, 0x00, 0xA0, 0x00, 0x7D - Default 1 Second
+  // 0x5A, 0xA5, 0x05, 0x82, 0x00, 0xA0, 0x00, {Low Byte} - Variable timing up to 3060ms (0xFF)(255ms*8ms)
+  byte sendBuffer[] = { CMD_HEAD1, CMD_HEAD2, 0x05, CMD_WRITE, 0x00, 0xA0, 0x00, lx };
+  _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
+  readDWIN();
 }
+
+/// set Touch Panel Beep Buzzer
+/// Enable / Disable the Touch Panel Beep Buzzer
+void DWIN::setTPBeep(bool enabled = true){
+  uint8_t lb = 0x38;
+  if(!enabled){
+    lb = 0x30;
+  }
+   // 0x5A, 0xA5, 0x07, 0x82, 0x00, 0x80, 0x5A, 0x00, 0x00, 0x38 - Enable
+   // 0x5A, 0xA5, 0x07, 0x82, 0x00, 0x80, 0x5A, 0x00, 0x00, 0x30 - Disable
+   byte sendBuffer[] = { CMD_HEAD1, CMD_HEAD2, 0x07, CMD_WRITE, 0x00, 0x80, 0x5A, 0x00, 0x00, lb};
+  _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
+  readDWIN();
+}
+
+
 // set text color (16-bit RGB) on controls which allow it ie. text control.
 // changes the control sp address space (sp=description pointer) content see the DWIN docs.  
 void DWIN::setTextColor(long spAddress, long spOffset, long color)

@@ -239,7 +239,7 @@ void DWIN::norReadWrite(bool write, long VPAddress, long NORAddress)
 
 // Beep Buzzer for up to 3060ms
 // Defaults to 1000ms, time in millis
-void DWIN::beepHMI(long time = 1000) {
+void DWIN::beepHMI(long time) {
   long cycles = (time / 8);
   uint8_t lx = (uint8_t)((cycles)&0xFF);
   // 0x5A, 0xA5, 0x05, 0x82, 0x00, 0xA0, 0x00, 0x7D - Default 1 Second
@@ -251,7 +251,7 @@ void DWIN::beepHMI(long time = 1000) {
 
 /// set Touch Panel Beep Buzzer
 /// Enable / Disable the Touch Panel Beep Buzzer
-void DWIN::setTPBeep(bool enabled = true){
+void DWIN::setTPBeep(bool enabled){
   uint8_t lb = 0x38;
   if(!enabled){
     lb = 0x30;

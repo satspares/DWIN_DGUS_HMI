@@ -7,7 +7,7 @@
  * Official Site --> https://www.dwin-global.com/
  *
  * Example sketch/program showing how to initialize DWIN Hmi with Arduino Or ESP32 Boards
- * In this example we can see on setup loop we change the page no and set the brightness &
+ * In this example we can see on setup loop we change the page no and
  * Listen to display Events from serial port
  *
  * DWIN HMI to Various Boards Pinout Connection
@@ -34,7 +34,7 @@
 
 //#define FORCEHWSERIAL
 //using Boards with Hardware serial you may need extra
-// defines in here and DWIN_Arduino.h eg. Teensyduino, nano (only 1 serial port) etc
+// defines in here and DWIN_Arduino.h eg. Teensyduino, nano (only 1 serial port) nano_every etc.
 // or #define FORCEHWSERIAL here and in DWIN_Arduino.h
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(FORCEHWSERIAL)
   #define DGUS_SERIAL Serial2

@@ -19,7 +19,7 @@ DWIN::DWIN(HardwareSerial &port, long baud)
     init((Stream *)&port, false);
 }
 
-#elif defined(ARDUINO_ARCH_RP2040)
+#elif defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_AVR_NANO_EVERY)
 DWIN::DWIN(HardwareSerial &port, long baud, bool initSerial)
 {
     if (initSerial)
@@ -237,6 +237,8 @@ void DWIN::norReadWrite(bool write, long VPAddress, long NORAddress)
     delay(30); // DWIN Docs say - appropriate delay - is this it?
 }
 
+/* Needs review
+
 // Beep Buzzer for up to 3060ms
 // Defaults to 1000ms, time in millis
 void DWIN::beepHMI(long time) {
@@ -262,7 +264,7 @@ void DWIN::setTPBeep(bool enabled){
   _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
   readDWIN();
 }
-
+*/
 
 // set text color (16-bit RGB) on controls which allow it ie. text control.
 // changes the control sp address space (sp=description pointer) content see the DWIN docs.  

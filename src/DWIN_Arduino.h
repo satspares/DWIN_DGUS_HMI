@@ -39,7 +39,7 @@ public:
      DWIN(HardwareSerial& port,long baud=DWIN_DEFAULT_BAUD_RATE);
     
     // Using Pico Board
-    #elif defined(ARDUINO_ARCH_RP2040)
+    #elif defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_AVR_NANO_EVERY)
     DWIN(HardwareSerial& port, long baud , bool initSerial);
 
     //Using STM32 Arduino
@@ -100,10 +100,14 @@ public:
     void norReadWrite(bool write,long VPAddress,long NORAddress);
      // Play a sound
     void playSound(byte soundID);
+    
+    /* Needs review
+
     // beep Buzzer for 1 sec
     void beepHMI(long time = 1000);
     // Enable/Disable beep Buzzer when touch panel is pressed
     void setTPBeep(bool enable = true);
+    */
     // set the hardware RTC The first two digits of the year are automatically added
     void setRTC( byte year, byte month, byte day, byte hour, byte minute, byte second);
     // update the software RTC The first two digits of the year are automatically added

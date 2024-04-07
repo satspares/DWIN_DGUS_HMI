@@ -1,3 +1,11 @@
+
+*** These modified files were found in JOE when it aborted on Sun Apr  7 18:53:44 2024
+*** JOE was aborted by UNIX signal 1
+
+*** File '(Unnamed)'
+overwrite
+
+*** File '/home/paul/Documents/PlatformIO/Projects/Satspares-Git/DWIN_DGUS_HMI/README.md'
 DWIN DGUS HMI Arduino Library forked from dwinhmi/DWIN_DGUS_HMI
 Arduino Library for DWIN DGUS T5L HMI Display
 Supporting Features.
@@ -50,7 +58,7 @@ added hardware serial for Arduino Mega etc.
 
 23-September-2023 add sendArray Function
 
-07-April-2024 Added nano every and hello world example
+07-April-2024 add nano every to library and example for.
 
 ## Usage
 Download the Library and extract the folder in the libraries of Arduino IDE,
@@ -114,4 +122,13 @@ void onHMIEvent(String address, int lastByte, String message, String response){
   // Get Backlight level
   int brightness = hmi.getBrightness();
 ```
----
+
+
+*** File '(Unnamed)'
+/home/paul/Documents/PlatformIO/Projects/Satspares-Git/DWIN_DGUS_HMI/README.md
+
+*** File '* Startup Log *'
+Processing '/etc/joe/jstarrc'...
+Processing '/etc/joe/ftyperc'...
+Finished processing /etc/joe/ftyperc
+Finished processing /etc/joe/jstarrc

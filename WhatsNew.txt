@@ -1,3 +1,6 @@
+07-April-2024
+Add Nano Every to library
+
 15-October 2023 add returnWord function.
 With hmi.returnWord(true) returns the last word in the rx callback event in the lastByte variable which is
 actually an int. Leaving the function out or hmi.returnWord(false) returns an 8bit value which is the previous result

@@ -106,6 +106,8 @@ public:
     void norReadWrite(bool write,long VPAddress,long NORAddress);
      // Play a sound
     void playSound(byte soundID);
+     // write long value
+    void writeLongValue(uint16_t vpAddress,unsigned long lValue);
     
     /* Needs review
 

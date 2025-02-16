@@ -30,6 +30,11 @@
 
 //#define FORCEHWSERIAL
 
+// Thinary Nano 4808 MegaCoreX
+#if defined(__AVR_ATmegax08__)
+ #define ARDUINO_AVR_NANO_EVERY
+#endif
+
 
 class DWIN{
 

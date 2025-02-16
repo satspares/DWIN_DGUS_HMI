@@ -106,7 +106,10 @@ public:
     void norReadWrite(bool write,long VPAddress,long NORAddress);
      // Play a sound
     void playSound(byte soundID);
-     // write long value
+    // write long value to VP  eg. change screen brightness
+    // #define LCDBackLightLow ((unsigned long)0x641503E8)    
+    // #define LCDBackLightAddress 0x0082
+    // writeLongValue(LCDBackLightAddress,LCDBackLightLow);
     void writeLongValue(uint16_t vpAddress,unsigned long lValue);
     
     /* Needs review

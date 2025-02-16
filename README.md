@@ -52,6 +52,8 @@ added hardware serial for Arduino Mega etc.
 
 07-April-2024 Added nano every and hello world example
 
+15-February-2025 add include for Thinary Nano 4808 MegaCoreX
+
 ## Usage
 Download the Library and extract the folder in the libraries of Arduino IDE,
  see example for rasperry pi pico

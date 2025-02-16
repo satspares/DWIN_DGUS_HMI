@@ -224,7 +224,14 @@ byte DWIN::readVPByte(long address, bool hiByte)
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     return readCMDLastByte(hiByte);
 }
-
+// write long value to VP  eg. change screen brightness
+// #define LCDBackLightLow ((unsigned long)0x641503E8)    
+// #define LCDBackLightAddress 0x0082
+// writeLongValue(LCDBackLightAddress,LCDBackLightLow);
+void DWIN::writeLongValue(uint16_t vpAddress,unsigned long lValue){
+    setVPWord((vpAddress+1), (lValue & 0xFFFF));
+    setVPWord(vpAddress,(lValue >> 16));
+}
 // read or write the NOR from/to VP must be on a even address 2 words are written or read
 void DWIN::norReadWrite(bool write, long VPAddress, long NORAddress)
 {

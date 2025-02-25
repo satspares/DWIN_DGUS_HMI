@@ -1,3 +1,6 @@
+23-February-2025
+Add include for Thinary Nano 4808 megacorex code
+
 07-April-2024
 Add Nano Every to library
 

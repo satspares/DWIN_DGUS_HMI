@@ -11,12 +11,14 @@ Supporting Features.
 - setVPByte()
 - setText()
 - beepHMI()
+- setTPBeep()
 - listenEvents()
 - playSound() 
 - setRTC()
 - setRTCSOFT()
 - norReadWrite()
 - setVPWord()
+- readVP()
 - readVPWord()
 - readVPByte()   //see .h file
 - setTextColor()
@@ -53,6 +55,8 @@ added hardware serial for Arduino Mega etc.
 07-April-2024 Added nano every and hello world example
 
 15-February-2025 add include for Thinary Nano 4808 MegaCoreX
+
+21-March-2025 fix beep functions move readVP() into main library from DWIN_Arduino_Helpers.hpp
 
 ## Usage
 Download the Library and extract the folder in the libraries of Arduino IDE,

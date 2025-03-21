@@ -207,6 +207,11 @@ void DWIN::setVPWord(long address, int data)
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }
+// read word from VP address returns directly using high and low byte
+uint16_t DWIN::readVP(long adddress)
+{
+    return (readVPByte(adddress,1) << 8) + readVPByte(adddress) ;
+}
 
 // read WordData from VP Address you can read sequential multiple words returned in rx event
 void DWIN::readVPWord(long address, byte numWords)
@@ -244,34 +249,33 @@ void DWIN::norReadWrite(bool write, long VPAddress, long NORAddress)
     delay(30); // DWIN Docs say - appropriate delay - is this it?
 }
 
-/* Needs review
+
 
 // Beep Buzzer for up to 3060ms
 // Defaults to 1000ms, time in millis
-void DWIN::beepHMI(long time) {
-  long cycles = (time / 8);
-  uint8_t lx = (uint8_t)((cycles)&0xFF);
+void DWIN::beepHMI(uint16_t beep_time) {
+  uint8_t lx = (uint8_t)((beep_time / 8)&0xFF);
   // 0x5A, 0xA5, 0x05, 0x82, 0x00, 0xA0, 0x00, 0x7D - Default 1 Second
-  // 0x5A, 0xA5, 0x05, 0x82, 0x00, 0xA0, 0x00, {Low Byte} - Variable timing up to 3060ms (0xFF)(255ms*8ms)
+  // 0x5A, 0xA5, 0x05, 0x82, 0x00, 0xA0, 0x00, {Low Byte} - Variable timing up to 2000ms
   byte sendBuffer[] = { CMD_HEAD1, CMD_HEAD2, 0x05, CMD_WRITE, 0x00, 0xA0, 0x00, lx };
   _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
   readDWIN();
 }
 
+
 /// set Touch Panel Beep Buzzer
 /// Enable / Disable the Touch Panel Beep Buzzer
 void DWIN::setTPBeep(bool enabled){
-  uint8_t lb = 0x38;
+  uint8_t lb = 0x08;
   if(!enabled){
-    lb = 0x30;
+    lb = 0x0;
   }
-   // 0x5A, 0xA5, 0x07, 0x82, 0x00, 0x80, 0x5A, 0x00, 0x00, 0x38 - Enable
-   // 0x5A, 0xA5, 0x07, 0x82, 0x00, 0x80, 0x5A, 0x00, 0x00, 0x30 - Disable
-   byte sendBuffer[] = { CMD_HEAD1, CMD_HEAD2, 0x07, CMD_WRITE, 0x00, 0x80, 0x5A, 0x00, 0x00, lb};
-  _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
-  readDWIN();
+   // 0x5A, 0xA5, 0x07, 0x82, 0x00, 0x80, 0x5A, 0x00, 0x00, 0x8 - Enable
+   // 0x5A, 0xA5, 0x07, 0x82, 0x00, 0x80, 0x5A, 0x00, 0x00, 0x0 - Disable  
+  setVPWord(0x0081,((readVP(0x0081) & 0xFFF7) + lb));
+  setVPWord(0x0080,0x5A00);  // set it.
 }
-*/
+
 
 // set text color (16-bit RGB) on controls which allow it ie. text control.
 // changes the control sp address space (sp=description pointer) content see the DWIN docs.  

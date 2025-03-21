@@ -4,13 +4,6 @@
 //#include "DWIN_Arduino_Helpers.hpp"
 
 
-
-// Read word from VP address
-uint16_t readVP(uint16_t vpAddress)
-{
-    return (hmi.readVPByte(vpAddress,1) << 8) + hmi.readVPByte(vpAddress) ;
-}
-
 // Read long value from VP address
 unsigned long readLongValue(uint16_t vpAddress){
  
@@ -99,6 +92,6 @@ const byte rotate180=2; const byte rotate270=3;
 //rotate the screen  eg. setScreenRotate(rotate270); // flip the screen
 void setScreenRotate(byte angle)
 {
-   hmi.setVPWord(0x0081,((readVP(0x0081) & 0xFFFC) + angle));
+   hmi.setVPWord(0x0081,((hmi.readVP(0x0081) & 0xFFFC) + angle));
    hmi.setVPWord(0x0080,0x5A00);  // set it.
 }

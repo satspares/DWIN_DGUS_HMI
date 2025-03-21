@@ -100,6 +100,8 @@ public:
     byte readVPByte(long address, bool = 0);
     // Set WordData on VP Address
     void setVPWord(long address, int data);
+    // Read word from VP address returns directly using high and low byte
+    uint16_t readVP(long address);
     // read WordData from VP Address you can read sequential multiple words (data returned in rx event) 
     void readVPWord(long address, byte numWords);
     // read or write the NOR from/to VP must be on a even address 2 word are written or read
@@ -111,14 +113,10 @@ public:
     // #define LCDBackLightAddress 0x0082
     // writeLongValue(LCDBackLightAddress,LCDBackLightLow);
     void writeLongValue(uint16_t vpAddress,unsigned long lValue);
-    
-    /* Needs review
-
     // beep Buzzer for 1 sec
-    void beepHMI(long time = 1000);
+    void beepHMI(uint16_t beep_time = 1000);
     // Enable/Disable beep Buzzer when touch panel is pressed
     void setTPBeep(bool enable = true);
-    */
     // set the hardware RTC The first two digits of the year are automatically added
     void setRTC( byte year, byte month, byte day, byte hour, byte minute, byte second);
     // update the software RTC The first two digits of the year are automatically added

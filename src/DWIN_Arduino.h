@@ -87,9 +87,9 @@ public:
     void setPage(byte pageID);
     // get Current Page ID
     byte getPage();
-    // set LCD Brightness
+    // set LCD Brightness 0x0-0x64
     void setBrightness(byte pConstrast);
-    // set LCD Brightness
+    // get LCD Brightness 
     byte getBrightness();
     // set Data on VP Address
     void setText(long address, String textData);

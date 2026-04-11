@@ -158,7 +158,8 @@ byte DWIN::getPage()
 void DWIN::setRTC(byte year, byte month, byte day, byte hour, byte minute, byte second)
 {
     // 5A A5 0B 82 00 9C 5A A5 year month day hour minute second
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x0B, CMD_WRITE, 0x00, 0x9C, 0x5A, 0xA5, year, month, day, hour, minute, second};
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x0B, CMD_WRITE, 0x00, 0x9C, 0x5A, 0xA5, 
+        year, month, day, hour, minute, second};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }
@@ -166,7 +167,8 @@ void DWIN::setRTC(byte year, byte month, byte day, byte hour, byte minute, byte 
 void DWIN::setRTCSOFT(byte year, byte month, byte day, byte weekday, byte hour, byte minute, byte second)
 {
     // 5A A5 0B 82 0010 year month day weekday(0-6 0=Sunday) hour minute second 00
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x0B, CMD_WRITE, 0x00, 0x10, year, month, day, weekday, hour, minute, second, 0x00};
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x0B, CMD_WRITE, 0x00, 0x10, year, month, day, 
+        weekday, hour, minute, second, 0x00};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }
@@ -187,6 +189,8 @@ void DWIN::setText(long address, String textData)
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }
+
+
     // Set Byte Data on VP Address makes more sense alias of below
 void DWIN::setVPByte(long address, byte data){  
     setVP(address, data);
@@ -194,7 +198,8 @@ void DWIN::setVPByte(long address, byte data){
 void DWIN::setVP(long address, byte data)
 {
     // 0x5A, 0xA5, 0x05, 0x82, 0x40, 0x20, 0x00, state
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x05, CMD_WRITE, (uint8_t)((address >> 8) & 0xFF), (uint8_t)((address)&0xFF), 0x00, data};
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x05, CMD_WRITE, (uint8_t)((address >> 8) & 0xFF), 
+        (uint8_t)((address)&0xFF), 0x00, data};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }
@@ -203,7 +208,8 @@ void DWIN::setVP(long address, byte data)
 void DWIN::setVPWord(long address, int data)
 {
     // 0x5A, 0xA5, 0x05, 0x82, hiVPaddress, loVPaddress, hiData, loData
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x05, CMD_WRITE, (uint8_t)((address >> 8) & 0xFF), (uint8_t)((address)&0xFF), (uint8_t)((data >> 8) & 0xFF),(uint8_t)((data)&0xFF)};
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x05, CMD_WRITE, (uint8_t)((address >> 8) & 0xFF), 
+        (uint8_t)((address)&0xFF), (uint8_t)((data >> 8) & 0xFF),(uint8_t)((data)&0xFF)};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }
@@ -217,7 +223,8 @@ uint16_t DWIN::readVP(long adddress)
 void DWIN::readVPWord(long address, byte numWords)
 {
     // 0x5A, 0xA5, 0x04, 0x83, hiVPaddress, loVPaddress, 0x01 (1 vp to read)
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x04, CMD_READ, (uint8_t)((address >> 8) & 0xFF), (uint8_t)((address)&0xFF), numWords};
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x04, CMD_READ, (uint8_t)((address >> 8) & 0xFF), 
+        (uint8_t)((address)&0xFF), numWords};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
 }
 
@@ -225,7 +232,8 @@ void DWIN::readVPWord(long address, byte numWords)
 byte DWIN::readVPByte(long address, bool hiByte)
 {
     // 0x5A, 0xA5, 0x04, 0x83, hiVPaddress, loVPaddress, 0x01)
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x04, CMD_READ, (uint8_t)((address >> 8) & 0xFF), (uint8_t)((address)&0xFF),0x1};
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x04, CMD_READ, (uint8_t)((address >> 8) & 0xFF), 
+        (uint8_t)((address)&0xFF),0x1};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     return readCMDLastByte(hiByte);
 }
@@ -243,12 +251,12 @@ void DWIN::norReadWrite(bool write, long VPAddress, long NORAddress)
     byte readWrite;
     (write) ? (readWrite = 0xa5) : (readWrite = 0x5a);
     byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x0B, CMD_WRITE, 0x00, 0x08, readWrite, (uint8_t)((NORAddress >> 16) & 0xFF), (uint8_t)((NORAddress >> 8) & 0xFF),
-                         (uint8_t)((NORAddress)&0xFF), (uint8_t)((VPAddress >> 8) & 0xFF), (uint8_t)((VPAddress)&0xFF), 0x00, 0x02};
+                         (uint8_t)((NORAddress)&0xFF), (uint8_t)((VPAddress >> 8) & 0xFF), 
+                         (uint8_t)((VPAddress)&0xFF), 0x00, 0x02};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
     delay(30); // DWIN Docs say - appropriate delay - is this it?
 }
-
 
 
 // Beep Buzzer for up to 3060ms
@@ -283,7 +291,8 @@ void DWIN::setTextColor(long spAddress, long spOffset, long color)
 { 
     // 0x5A, 0xA5, 0x05, hi spAddress, lo spAddress, hi color, lo color
     spAddress = (spAddress + spOffset);
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x05, CMD_WRITE, (uint8_t)((spAddress >> 8) & 0xFF), (uint8_t)((spAddress)&0xFF),(uint8_t)((color >> 8) & 0xFF), (uint8_t)((color)&0xFF)};
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x05, CMD_WRITE, (uint8_t)((spAddress >> 8) & 0xFF), 
+        (uint8_t)((spAddress)&0xFF),(uint8_t)((color >> 8) & 0xFF), (uint8_t)((color)&0xFF)};
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }
@@ -293,7 +302,8 @@ void DWIN::setFloatValue(long vpAddress, float fValue){
     byte hx[4] = {0};
     byte* new_bytes = reinterpret_cast<byte*>(&fValue);
     memcpy(hx, new_bytes, 4);
-    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x07, CMD_WRITE, (uint8_t)((vpAddress >> 8) & 0xFF), (uint8_t)((vpAddress)&0xFF),hx[3],hx[2],hx[1],hx[0] };
+    byte sendBuffer[] = {CMD_HEAD1, CMD_HEAD2, 0x07, CMD_WRITE, (uint8_t)((vpAddress >> 8) & 0xFF), 
+        (uint8_t)((vpAddress)&0xFF),hx[3],hx[2],hx[1],hx[0] };
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }
@@ -327,7 +337,8 @@ void DWIN::sendIntArray(uint16_t instruction,uint16_t dwinIntArray[],byte arrayS
         j ++;
     }
 
-    byte sendBuffer[4 + sizeof(dwinSendByteArray)] = {CMD_HEAD1, CMD_HEAD2, (uint8_t)((arraySize + 1)),(uint8_t)((instruction)&0xFF) };
+    byte sendBuffer[4 + sizeof(dwinSendByteArray)] = {CMD_HEAD1, CMD_HEAD2, (uint8_t)((arraySize + 1)),
+        (uint8_t)((instruction)&0xFF) };
     memcpy(sendBuffer + 4, dwinSendByteArray, sizeof(dwinSendByteArray));
     _dwinSerial->write(sendBuffer,sizeof(sendBuffer));
           
@@ -357,6 +368,7 @@ void DWIN::listen()
 {
       handle();    
 }
+
 
 String DWIN::readDWIN()
 {
@@ -399,6 +411,7 @@ String DWIN::checkHex(byte currentNo)
     return String(currentNo, HEX);
 }
 
+
 String DWIN::handle()
 {
     int lastBytes;
@@ -414,16 +427,22 @@ String DWIN::handle()
     {
         while (_dwinSerial->available() > 0)
         {
-            delay(10);
-            int inhex = _dwinSerial->read();
-            if (inhex == 90 || inhex == 165)
-            { // 5A A5
-                isFirstByte = true;
-                message = "";
-                address = ""; 
-                response.concat(checkHex(inhex) + " ");
-                continue;
-            }
+
+        delay(10);
+        int inhex = _dwinSerial->read();
+        int b1 = _dwinSerial->peek(); // check but don't consume yet
+
+        // Expect frame header: 5A A5
+        if (inhex == 0x5A && b1 == 0xA5) {
+            _dwinSerial->read(); // consume b1
+            isFirstByte = true;
+            message = "";
+            address = ""; 
+            response.concat(checkHex(inhex) + " ");
+            response.concat(checkHex(b1) + " ");
+         continue;
+        }
+
             for (int i = 1; i <= inhex; i++)
             {
                 int inByte = _dwinSerial->read();  
@@ -465,13 +484,20 @@ String DWIN::handle()
     {
         if (_retWord) lastBytes = (previousByte << 8) + lastBytes;
         listenerCallback(address, lastBytes, message, response);
+
+        if (_echo)
+        {
+        Serial.println(
+                "Address: 0x"  + address +
+                " | Data: 0x"  + String(lastBytes, HEX) +
+                " | Message: " + message +
+                " | Response: "+ response
+            ); 
+        }
     }
-    if (isFirstByte && _echo)
-    {
-        Serial.println("Address :0x" + address + " | Data :0x" + String(lastBytes, HEX) + " | Message : " + message + " | Response " + response);
-    }
+    
     return response;
-}
+} 
 
 byte DWIN::readCMDLastByte(bool hiByte)
 {

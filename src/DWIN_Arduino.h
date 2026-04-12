@@ -93,6 +93,10 @@ public:
     byte getBrightness();
     // set Data on VP Address
     void setText(long address, String textData);
+    // read VP text string
+    // noWords should be your char length / 2
+    // eg. read 12 chars Serial.println(readVPText(0x2300,6)) ;
+    String readVPText(uint16_t vpAddress,byte noWords);
     // // Set Byte Data on VP Address makes more sense
     void setVPByte(long address, byte data); //alias of below
     void setVP(long address, byte data);

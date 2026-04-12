@@ -8,9 +8,11 @@
 
 #define MIN_ASCII 32
 #define MAX_ASCII 255
+#define MAX_READ_ASCII 254
 
 #define CMD_READ_TIMEOUT 50
 #define READ_TIMEOUT 100 
+#define SERIAL_DELAY 5
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(FORCEHWSERIAL)
 DWIN::DWIN(HardwareSerial &port, long baud)
@@ -172,24 +174,36 @@ void DWIN::setRTCSOFT(byte year, byte month, byte day, byte weekday, byte hour, 
     _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
     readDWIN();
 }
-// Set Text on VP Address
+
 void DWIN::setText(long address, String textData)
 {
-    byte ffEnding[2] = {0xFF,0xFF};
     int dataLen = textData.length();
-    byte startCMD[] = {CMD_HEAD1, CMD_HEAD2, (uint8_t)(dataLen + 5), CMD_WRITE,
-                       (uint8_t)((address >> 8) & 0xFF), (uint8_t)((address)&0xFF)};
-    byte dataCMD[dataLen];
-    textData.getBytes(dataCMD, dataLen + 1);
-    byte sendBuffer[8 + dataLen];
+    int totalLen = 6 + dataLen + 2; // startCMD + data + ffEnding
 
-    memcpy(sendBuffer, startCMD, sizeof(startCMD));
-    memcpy(sendBuffer + 6, dataCMD, sizeof(dataCMD));
-    memcpy(sendBuffer + (6 + sizeof(dataCMD)),ffEnding,2); // add ending 0xFFFF
-    _dwinSerial->write(sendBuffer, sizeof(sendBuffer));
+    // Use dynamic allocation
+    byte* sendBuffer = new byte[totalLen];
+    if (!sendBuffer) return; // allocation failed
+
+    // Build header directly into buffer
+    sendBuffer[0] = CMD_HEAD1;
+    sendBuffer[1] = CMD_HEAD2;
+    sendBuffer[2] = (uint8_t)(dataLen + 5); // length field: 4 cmd bytes + data + 0xFF 0xFF 
+    sendBuffer[3] = CMD_WRITE;
+    sendBuffer[4] = (uint8_t)((address >> 8) & 0xFF);
+    sendBuffer[5] = (uint8_t)(address & 0xFF);
+
+    // Copy string bytes (getBytes writes dataLen chars + null; buffer is big enough)
+    textData.getBytes(sendBuffer + 6, dataLen + 1);
+
+    // Append 0xFF 0xFF terminator
+    sendBuffer[6 + dataLen]     = 0xFF;
+    sendBuffer[6 + dataLen + 1] = 0xFF;
+
+    _dwinSerial->write(sendBuffer, totalLen);
+
+    delete[] sendBuffer;
     readDWIN();
 }
-
 
     // Set Byte Data on VP Address makes more sense alias of below
 void DWIN::setVPByte(long address, byte data){  
@@ -258,6 +272,25 @@ void DWIN::norReadWrite(bool write, long VPAddress, long NORAddress)
     delay(30); // DWIN Docs say - appropriate delay - is this it?
 }
 
+// noWords should be your char length / 2
+// eg. read 12 chars Serial.println(readVPText(0x2300,6)) ;
+String DWIN::readVPText(uint16_t vpAddress,byte noWords){
+  int i = 0;
+  bool nextByte = true; //true = read first char
+  byte byteRead = 0;
+  String textMessage;
+  while(i < noWords){
+    byteRead = readVPByte((vpAddress+i),nextByte);
+    
+    if ((byteRead < MIN_ASCII) || (byteRead > MAX_READ_ASCII)){
+      break;
+    }
+    textMessage += char(byteRead);
+    nextByte = !nextByte;
+    if (nextByte){i++;}
+  }
+  return textMessage;
+}
 
 // Beep Buzzer for up to 3060ms
 // Defaults to 1000ms, time in millis
@@ -414,90 +447,107 @@ String DWIN::checkHex(byte currentNo)
 
 String DWIN::handle()
 {
-    int lastBytes;
-    int previousByte; 
     String response;
     String address;
     String message;
-    bool isSubstr = false;
-    bool messageEnd = false;
-    bool isFirstByte = false;
+    String lastBytes;
+    int    previousByte = 0;
+    int    lastByte     = 0;
+    bool   frameStarted = false;
+    bool   messageEnd   = false;
+    bool   isSubstr     = false;
+
     unsigned long startTime = millis();
-    while ((millis() - startTime < READ_TIMEOUT))
+
+    while ((millis() - startTime) < READ_TIMEOUT)
     {
-        while (_dwinSerial->available() > 0)
-        {
+        if (_dwinSerial->available() <= 2)
+            continue;
 
-        delay(10);
+        delay(SERIAL_DELAY);
+      
         int inhex = _dwinSerial->read();
-        int b1 = _dwinSerial->peek(); // check but don't consume yet
+        // Detect frame header: 0x5A 0xA5
+        if (inhex == 0x5A && _dwinSerial->peek() == 0xA5)
+        {
+            _dwinSerial->read(); // consume 0xA5
 
-        // Expect frame header: 5A A5
-        if (inhex == 0x5A && b1 == 0xA5) {
-            _dwinSerial->read(); // consume b1
-            isFirstByte = true;
-            message = "";
-            address = ""; 
+            frameStarted = true;
+            message      = "";
+            address      = "";
+            messageEnd   = false;
+            isSubstr     = false;
+
             response.concat(checkHex(inhex) + " ");
-            response.concat(checkHex(b1) + " ");
-         continue;
+            response.concat(checkHex(0xA5) + " ");
+            continue;
         }
 
-            for (int i = 1; i <= inhex; i++)
+        // inhex is the length byte of the payload
+        int payloadLength = inhex;
+        response.concat(checkHex(payloadLength) + " ");
+
+        for (int i = 1; i <= payloadLength; i++)
+        {
+            // read rest of bytes starting with instruction 0x82/0x83
+            int inByte = _dwinSerial->read();
+            response.concat(checkHex(inByte) + " ");
+
+            // Bytes 2–3 form the variable address
+            if (i == 2 || i == 3)
             {
-                int inByte = _dwinSerial->read();  
-                if (i == 1)response.concat(checkHex(inhex) + " ");
-                if (i == (inhex-1))previousByte=inByte;                           
-                response.concat(checkHex(inByte) + " ");
-                if (i <= 3)
-                {               
-                    if ((i == 2) || (i == 3))
-                    {
-                        address.concat(checkHex(inByte));
-                    }
-                    continue;
+                address.concat(checkHex(inByte));
+                continue;
+            }
+
+            // Track the second-to-last byte for _retWord reconstruction
+            if (i == (payloadLength - 1))
+                previousByte = inByte;
+
+            // Bytes 4+ word length data/message bytes
+            if (i >= 4 && !messageEnd)
+            {
+                if (isSubstr && inByte != MAX_ASCII && inByte >= MIN_ASCII)
+                {
+                    message += char(inByte);
                 }
                 else
                 {
-                    if (messageEnd == false )
-                    {
-                        if (isSubstr && inByte != MAX_ASCII && inByte >= MIN_ASCII)
-                        {
-                            message += char(inByte);
-                        }
-                        else
-                        {
-                            if (inByte == MAX_ASCII)
-                            {
-                                messageEnd = true;
-                            }
-                            isSubstr = true;
-                        }
-                    }
+                    if (inByte == MAX_ASCII)
+                        messageEnd = true;
+                    else
+                        isSubstr = true;
                 }
-                lastBytes = inByte;
             }
+
+            lastByte = inByte;
         }
     }
 
-    if (isFirstByte)
+    if (frameStarted)
     {
-        if (_retWord) lastBytes = (previousByte << 8) + lastBytes;
-        listenerCallback(address, lastBytes, message, response);
+        if (_retWord)
+            lastByte = (previousByte << 8) | lastByte;
+
+        listenerCallback(address, lastByte, message, response);
 
         if (_echo)
         {
-        Serial.println(
-                "Address: 0x"  + address +
-                " | Data: 0x"  + String(lastBytes, HEX) +
-                " | Message: " + message +
+            Serial.println(
+                "Address: 0x"  + address  +
+                " | Data: 0x"  + String(lastByte, HEX) +
+                " | Word Data: 0x" + String((previousByte << 8) | lastByte,HEX) +
+                " | Message: " + message   +
                 " | Response: "+ response
-            ); 
+            );
         }
     }
-    
+
     return response;
-} 
+}
+
+
+
 
 byte DWIN::readCMDLastByte(bool hiByte)
 {

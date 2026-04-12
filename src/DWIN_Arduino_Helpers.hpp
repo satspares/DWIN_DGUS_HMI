@@ -66,27 +66,6 @@ unsigned long getWordReply(String response, byte bytesBack){
 }
 
 
-// noWords should be your char length / 2
-// eg. read 12 chars Serial.println(readVPText(0x2300,6)) ;
-String readVPText(uint16_t vpAddress,byte noWords){
-  int i = 0;
-  bool nextByte = true; //true = read first char
-  byte byteRead = 0;
-  String textMessage;
-  while(i < noWords){
-    byteRead = hmi.readVPByte((vpAddress+i),nextByte);
-    // 128 can be 254 for extended ascii
-    if ((byteRead < 32) || (byteRead > 128)){
-      break;
-    }
-    textMessage += char(byteRead);
-    nextByte = ! nextByte;
-    if (nextByte){i++;}
-  }
-  return textMessage;
-}
-
-
 const byte rotate0=0; const byte rotate90=1;
 const byte rotate180=2; const byte rotate270=3;
 //rotate the screen  eg. setScreenRotate(rotate270); // flip the screen

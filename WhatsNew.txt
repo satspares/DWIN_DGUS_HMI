@@ -1,3 +1,7 @@
+12-April-2026
+Move readVPText to main library
+Improve Serial Comms.
+
 23-February-2025
 Add include for Thinary Nano 4808 megacorex code
 

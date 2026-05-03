@@ -282,7 +282,7 @@ String DWIN::readVPText(uint16_t vpAddress,byte noWords){
   while(i < noWords){
     byteRead = readVPByte((vpAddress+i),nextByte);
     
-    if ((byteRead < MIN_ASCII) || (byteRead > MAX_READ_ASCII)){
+    if (byteRead == 0x00 || byteRead < 32 || byteRead > 128){
       break;
     }
     textMessage += char(byteRead);
@@ -559,8 +559,9 @@ byte DWIN::readCMDLastByte(bool hiByte)
     }
 #endif
 
-    byte lastByte = -1;
-    byte previousByte = -1;
+    byte lastByte = 0xff;
+    byte previousByte = 0xff;
+    int bytesRead = 0;
     unsigned long startTime = millis(); // Start time for Timeout
     while ((millis() - startTime < CMD_READ_TIMEOUT))
     {
@@ -568,9 +569,11 @@ byte DWIN::readCMDLastByte(bool hiByte)
         {
             previousByte = lastByte;
             lastByte = _dwinSerial->read();
+            bytesRead++;
         }
+        yield(); // Prevent watchdog timeout on ESP8266/ESP32
     }
-    if (hiByte){
+    if (hiByte && bytesRead >= 2){
       return previousByte;
     }else{
       return lastByte;  
@@ -580,6 +583,10 @@ byte DWIN::readCMDLastByte(bool hiByte)
 
 void DWIN::flushSerial()
 {
-    Serial.flush();
     _dwinSerial->flush();
+    // Clear incoming RX buffer (flush() does NOT clear RX on Arduino)
+    while (_dwinSerial->available())
+    {
+        _dwinSerial->read();
+    }
 }
